@@ -40,5 +40,6 @@ SignIn and SignUp page with Nextjs , Prisma , Supabase, Next-auth and Shadcn lib
 
 > > > > > > > cc65e89baa74eb05dc7bbfd53dbcc8b22c225313
 
-Add edit delete functionality
+Add edit and delete functionality
 Add link to the url
+fix clicks

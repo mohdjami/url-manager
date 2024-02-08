@@ -1,9 +1,12 @@
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
+let count: number = 0;
 
 export async function GET(req: NextRequest) {
   try {
     const slug = req.url.split("/").pop();
+    count++;
+    console.log(count);
     if (!slug) {
       return NextResponse.json(
         {
@@ -20,6 +23,7 @@ export async function GET(req: NextRequest) {
       },
       select: {
         originalUrl: true,
+        clicks: true,
       },
     });
     if (!url) {
@@ -37,9 +41,7 @@ export async function GET(req: NextRequest) {
         shortUrl: slug,
       },
       data: {
-        clicks: {
-          increment: 1,
-        },
+        clicks: count,
       },
     });
     return NextResponse.redirect(url?.originalUrl || "/", {

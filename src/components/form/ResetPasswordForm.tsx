@@ -21,8 +21,6 @@ type FormValues = {
   confirmPassword: string;
 };
 
-//first i will store the created token in the database for that email then i will check it here if it matches with the token in the database then only i  will show the form to submit the passwords and change them otherwiise not okkay
-
 const Schema = z
   .object({
     password: z
@@ -83,16 +81,16 @@ const ResetPassword = () => {
         });
         router.push("/sign-in");
         toast({
-          title: "Password Upsated",
+          title: "Password Updasted",
           description:
             "Password has been updated successfully, you can now login",
           variant: "default",
         });
-        console.log(response);
-        // Handle success (e.g., show a success message and redirect to login page)
       } catch (error) {
-        console.log(error);
-        // Handle error (e.g., show an error message)
+        toast({
+          title: "Something Went Very Wrong",
+          variant: "destructive",
+        });
       }
     };
 

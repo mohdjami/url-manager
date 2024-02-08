@@ -18,18 +18,47 @@ import {
   Table,
 } from "@/components/ui/table";
 import { JSX, SVGProps, useEffect, useState } from "react";
+import { useToast } from "./ui/use-toast";
+import { DialogDemo } from "./edit-dialogue";
 
 export default function Dashboard() {
   const [urls, setUrls] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await fetch("api/urls/delete", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: id }),
+      });
+      console.log(await res.json());
+      toast({
+        title: "Deleted Successfully",
+        variant: "default",
+      });
+      window.location.reload();
+    } catch (error) {
+      toast({
+        title: "An error occured",
+        variant: "destructive",
+      });
+    }
+  };
+
   useEffect(() => {
     async function fetchUrls() {
-      setLoading(true);
-      const res = await fetch("api/urls/get-urls");
-      const data = await res.json();
-      setUrls(data.urls);
-      setLoading(false);
-      console.log(data.urls.map((url: any) => url.shortUrl) || []);
+      try {
+        setLoading(true);
+        const res = await fetch("api/urls/get-urls");
+        const data = await res.json();
+        setUrls(data.urls);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+      }
     }
     fetchUrls();
   }, []);
@@ -78,10 +107,18 @@ export default function Dashboard() {
                     <TableCell>{`${url.clicks}`}</TableCell>
                     <TableCell className="flex justify-end gap-2">
                       <Button size="icon" variant="ghost">
-                        <FileEditIcon className="w-4 h-4" />
+                        <DialogDemo
+                          id={url.id}
+                          og={url.originalUrl}
+                          su={url.shortUrl}
+                        />
                         <span className="sr-only">Edit</span>
                       </Button>
-                      <Button size="icon" variant="ghost">
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => handleDelete(url.id)}
+                      >
                         <TrashIcon className="w-4 h-4" />
                         <span className="sr-only">Delete</span>
                       </Button>
@@ -113,29 +150,6 @@ function BellIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
     >
       <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
       <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-    </svg>
-  );
-}
-
-function FileEditIcon(
-  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>
-) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M4 13.5V4a2 2 0 0 1 2-2h8.5L20 7.5V20a2 2 0 0 1-2 2h-5.5" />
-      <polyline points="14 2 14 8 20 8" />
-      <path d="M10.42 12.61a2.1 2.1 0 1 1 2.97 2.97L7.95 21 4 22l.99-3.95 5.43-5.44Z" />
     </svg>
   );
 }

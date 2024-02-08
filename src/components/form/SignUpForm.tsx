@@ -47,10 +47,6 @@ const SignUpForm = () => {
       confirmPassword: "",
     },
   });
-  //when the user signs up an email should be sent to the user mail and he should verify it by clicking on it right
-  //until the email is verified the user should not be signed up or created
-  //so the workflow should be like user clicks on sign up button
-  //
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
     try {
       const response = await axios.post("/api/auth/user", values);
@@ -62,10 +58,8 @@ const SignUpForm = () => {
           console.log("email verification response:", response);
           router.push("/sign-in");
           toast({
-            title: "Verify Email to Sign-in",
-            description:
-              "A verification email has been sent to your email address. Please verify your email to complete the sign-up process.",
-            variant: "destructive",
+            title: "A verification email has been sent to your email address",
+            variant: "default",
           });
         } catch (error) {
           console.log("error in sending email verification", error);

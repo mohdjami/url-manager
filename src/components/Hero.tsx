@@ -5,13 +5,13 @@ import { Button } from "@/components/ui/button";
 import { JSX, SVGProps, useState } from "react";
 import createShortUrl from "@/lib/urls";
 import { Card, CardDescription } from "./ui/card";
-//Send the url to backend and create a short url and return it to the user
-//The user can then share the short url with the world
+import { useToast } from "./ui/use-toast";
 
 export default function Hero() {
   const [url, setUrl] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [success, setSucces] = useState(false);
+  const { toast } = useToast();
   let [code, setCode] = useState("");
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
@@ -25,9 +25,11 @@ export default function Hero() {
     });
     const data = await res.json();
     setCode(data.code);
-    if (!res.ok) throw new Error(data.message || "Something went wrong!");
-    else {
+    if (!res.ok) {
+      toast({ title: data.error, variant: "destructive" });
+    } else {
       setSucces(true);
+      toast({ title: "Shortened URL has been created", variant: "default" });
     }
   };
 

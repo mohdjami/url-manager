@@ -72,19 +72,8 @@ const SignInForm = () => {
           variant: "destructive",
         });
       } else {
-        const response = await verifyEmail(values.email);
-
-        if (response.status === 200) {
-          router.push("/dashboard");
-          router.refresh();
-        } else {
-          toast({
-            title: "Verify your email",
-            description:
-              "A verification link has been sent to your email id. Please verify to gain access of all the features of the application.",
-            variant: "destructive",
-          });
-        }
+        router.push("/dashboard");
+        router.refresh();
       }
     } catch (error) {
       handleError(error);

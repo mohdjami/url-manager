@@ -9,7 +9,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { email } = body;
-    startMessageConsumer();
+    await startMessageConsumer();
 
     produceMessage("EMAILS", email);
 

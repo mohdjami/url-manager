@@ -5,7 +5,12 @@ export const kafka = new Kafka({
   clientId: "url-shortener",
   brokers: [process.env.KAFKA_BROKER || ""],
   ssl: {
-    ca: [fs.readFileSync(path.resolve("./ca.pem"), "utf-8")],
+    ca: [
+      fs.readFileSync(
+        path.resolve(process.env.CA_PEM_PATH || "./ca.pem"),
+        "utf-8"
+      ),
+    ],
   },
   sasl: {
     mechanism: "plain",

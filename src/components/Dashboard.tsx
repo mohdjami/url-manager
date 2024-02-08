@@ -1,8 +1,4 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/nky4VK5hYNG
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
+"use client";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -24,7 +20,7 @@ import {
 import { JSX, SVGProps, useEffect, useState } from "react";
 
 export default function Dashboard() {
-  const [urls, setUrls] = useState("");
+  const [urls, setUrls] = useState([]);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     async function fetchUrls() {
@@ -33,12 +29,12 @@ export default function Dashboard() {
       const data = await res.json();
       setUrls(data.urls);
       setLoading(false);
-      console.log(data.urls);
+      console.log(data.urls.map((url: any) => url.shortUrl) || []);
     }
     fetchUrls();
   }, []);
   return (
-    <div className="flex flex-col w-full py-5 min-h-screen">
+    <div className="flex flex-col w-full py-10 min-h-screen">
       <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10">
         <div className="flex flex-col gap-2">
           <h1 className="text-3xl font-bold">Links</h1>
@@ -64,74 +60,35 @@ export default function Dashboard() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow className="divide-y rounded-lg">
-                <TableCell className="font-semibold">
-                  acme.co/shortlink
-                </TableCell>
-                <TableCell>example.com/very/long/link/to/a/page</TableCell>
-                <TableCell>123</TableCell>
-                <TableCell className="flex justify-end gap-2">
-                  <Button size="icon" variant="ghost">
-                    <FileEditIcon className="w-4 h-4" />
-                    <span className="sr-only">Edit</span>
-                  </Button>
-                  <Button size="icon" variant="ghost">
-                    <TrashIcon className="w-4 h-4" />
-                    <span className="sr-only">Delete</span>
-                  </Button>
-                </TableCell>
-              </TableRow>
-              <TableRow className="divide-y rounded-lg">
-                <TableCell className="font-semibold">
-                  acme.co/shortlink
-                </TableCell>
-                <TableCell>example.com/very/long/link/to/a/page</TableCell>
-                <TableCell>123</TableCell>
-                <TableCell className="flex justify-end gap-2">
-                  <Button size="icon" variant="ghost">
-                    <FileEditIcon className="w-4 h-4" />
-                    <span className="sr-only">Edit</span>
-                  </Button>
-                  <Button size="icon" variant="ghost">
-                    <TrashIcon className="w-4 h-4" />
-                    <span className="sr-only">Delete</span>
-                  </Button>
-                </TableCell>
-              </TableRow>
-              <TableRow className="divide-y rounded-lg">
-                <TableCell className="font-semibold">
-                  acme.co/shortlink
-                </TableCell>
-                <TableCell>example.com/very/long/link/to/a/page</TableCell>
-                <TableCell>123</TableCell>
-                <TableCell className="flex justify-end gap-2">
-                  <Button size="icon" variant="ghost">
-                    <FileEditIcon className="w-4 h-4" />
-                    <span className="sr-only">Edit</span>
-                  </Button>
-                  <Button size="icon" variant="ghost">
-                    <TrashIcon className="w-4 h-4" />
-                    <span className="sr-only">Delete</span>
-                  </Button>
-                </TableCell>
-              </TableRow>
-              <TableRow className="divide-y rounded-lg">
-                <TableCell className="font-semibold">
-                  acme.co/shortlink
-                </TableCell>
-                <TableCell>example.com/very/long/link/to/a/page</TableCell>
-                <TableCell>123</TableCell>
-                <TableCell className="flex justify-end gap-2">
-                  <Button size="icon" variant="ghost">
-                    <FileEditIcon className="w-4 h-4" />
-                    <span className="sr-only">Edit</span>
-                  </Button>
-                  <Button size="icon" variant="ghost">
-                    <TrashIcon className="w-4 h-4" />
-                    <span className="sr-only">Delete</span>
-                  </Button>
-                </TableCell>
-              </TableRow>
+              {urls.map((url: any) => {
+                return (
+                  <TableRow className="divide-y rounded-lg">
+                    <TableCell className="font-semibold" typeof="url">
+                      <Link
+                        href={`${process.env.NEXT_PUBLIC_URL}/up/${url.shortUrl}`}
+                      >
+                        {`${process.env.NEXT_PUBLIC_URL}/up/${url.shortUrl}`}
+                      </Link>
+                    </TableCell>
+                    <TableCell>
+                      <Link
+                        href={`${url.originalUrl}`}
+                      >{`${url.originalUrl}`}</Link>
+                    </TableCell>
+                    <TableCell>{`${url.clicks}`}</TableCell>
+                    <TableCell className="flex justify-end gap-2">
+                      <Button size="icon" variant="ghost">
+                        <FileEditIcon className="w-4 h-4" />
+                        <span className="sr-only">Edit</span>
+                      </Button>
+                      <Button size="icon" variant="ghost">
+                        <TrashIcon className="w-4 h-4" />
+                        <span className="sr-only">Delete</span>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </div>

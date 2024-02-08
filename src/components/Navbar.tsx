@@ -35,12 +35,17 @@ const Navbar = async () => {
         </Link>
 
         <Link
-          className="text-sm font-medium hover:underline underline-offset-4"
+          className="text-sm font-medium hover:underline underline-offset-4 dark:text-black"
           href="#"
         >
           Contact
         </Link>
-
+        <Link
+          className="text-sm font-medium hover:underline underline-offset-4 dark:text-black"
+          href="/dashboard"
+        >
+          Dashboard
+        </Link>
         {session?.user ? (
           <UserAccountNav />
         ) : (

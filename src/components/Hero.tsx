@@ -77,7 +77,9 @@ export default function Hero() {
                 <Card>
                   <CardDescription>
                     {success ? (
-                      <p>{`${process.env.NEXT_PUBLIC_URL}/up/${code}`}</p>
+                      <Link
+                        href={`${process.env.NEXT_PUBLIC_URL}/up/${code}`}
+                      >{`${process.env.NEXT_PUBLIC_URL}/up/${code}`}</Link>
                     ) : (
                       <p>Create A url</p>
                     )}

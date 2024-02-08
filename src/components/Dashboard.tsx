@@ -21,17 +21,30 @@ import {
   TableBody,
   Table,
 } from "@/components/ui/table";
-import { JSX, SVGProps } from "react";
+import { JSX, SVGProps, useEffect, useState } from "react";
 
 export default function Dashboard() {
+  const [urls, setUrls] = useState("");
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    async function fetchUrls() {
+      setLoading(true);
+      const res = await fetch("api/urls/get-urls");
+      const data = await res.json();
+      setUrls(data.urls);
+      setLoading(false);
+      console.log(data.urls);
+    }
+    fetchUrls();
+  }, []);
   return (
     <div className="flex flex-col w-full py-5 min-h-screen">
       <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10">
         <div className="flex flex-col gap-2">
           <h1 className="text-3xl font-bold">Links</h1>
           <p className="text-gray-500 dark:text-gray-400">
-            Here are the links you've created. Share them with the world and
-            track their performance.
+            Here are the links you&apos;ve created. Share them with the world
+            and track their performance.
           </p>
         </div>
         <div className="flex items-center gap-4 mt-8">

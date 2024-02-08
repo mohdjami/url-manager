@@ -3,8 +3,7 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { JSX, SVGProps, useState } from "react";
-import createShortUrl from "@/lib/urls";
-import { Card, CardDescription } from "./ui/card";
+import { Card, CardContent, CardDescription } from "./ui/card";
 import { useToast } from "./ui/use-toast";
 
 export default function Hero() {
@@ -48,6 +47,21 @@ export default function Hero() {
                 </p>
               </div>
               <div className="space-y-2 min-w-[300px]">
+                <form className="flex space-x-2">
+                  <div className="flex flex-row justify-between">
+                    <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
+                      {`${process.env.NEXT_PUBLIC_URL}/up/`}
+                    </p>
+                    <Input
+                      className="max-w-lg flex-1"
+                      placeholder="Custom"
+                      type="name"
+                      onChange={(e) => {
+                        setCode(e.target.value);
+                      }}
+                    />
+                  </div>
+                </form>
                 <form className="flex space-x-2" onSubmit={handleSubmit}>
                   <Input
                     className="max-w-lg flex-1"
@@ -61,29 +75,19 @@ export default function Hero() {
                     Shorten
                   </Button>
                 </form>
-                <p>Or Create a Custom URL</p>
-                <form className="flex space-x-2" onSubmit={handleSubmit}>
-                  <p>{`${process.env.NEXT_PUBLIC_URL}/up/`}</p>
-                  <Input
-                    className="max-w-lg flex-1"
-                    placeholder="Custom"
-                    type="name"
-                    onChange={(e) => {
-                      setCode(e.target.value);
-                    }}
-                  />
-                  <Button type="submit" onClick={handleSubmit}>
-                    Shorten
-                  </Button>
-                </form>
                 <Card>
                   <CardDescription>
-                    {success ? (
-                      <Link
-                        href={`${process.env.NEXT_PUBLIC_URL}/up/${code}`}
-                      >{`${process.env.NEXT_PUBLIC_URL}/up/${code}`}</Link>
+                    {code && success ? (
+                      <Link href={`${process.env.NEXT_PUBLIC_URL}/up/${code}`}>
+                        {" "}
+                        <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
+                          {`${process.env.NEXT_PUBLIC_URL}/up/${code}`}
+                        </p>
+                      </Link>
                     ) : (
-                      <p>Create A url</p>
+                      <CardContent>
+                        <p>Create a URL</p>
+                      </CardContent>
                     )}
                   </CardDescription>
                 </Card>

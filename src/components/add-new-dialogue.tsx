@@ -14,42 +14,42 @@ import { Label } from "@/components/ui/label";
 import { useTheme } from "next-themes";
 import { SVGProps, use, useState } from "react";
 import { useToast } from "./ui/use-toast";
-interface Props {
-  id: string;
-  og: string;
-  su: string;
-}
-export function DialogDemo({ id, og, su }: Props) {
-  const [originalUrl, setOriginalUrl] = useState<string>("");
-  const [shortUrl, setShortUrl] = useState<string>("");
+
+export function AddNewUrl() {
+  const [url, setUrl] = useState<string>("");
+  const [code, setCode] = useState<string>("");
   const { toast } = useToast();
-  const handleUpdate = async () => {
+  const handleCreate = async () => {
+    console.log(url, code);
     try {
-      const res = await fetch("api/urls/update", {
+      const res = await fetch("api/urls/create-url", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id, originalUrl, shortUrl }),
+        body: JSON.stringify({ url, code }),
       });
+      const data = await res.json();
+      setCode(data.code);
+      console.log(data);
+      if (!res.ok) {
+        toast({ title: data.error, variant: "destructive" });
+      } else {
+        toast({ title: "Shortened URL has been created", variant: "default" });
+      }
       window.location.reload();
     } catch (error) {
-      toast({
-        title: "An error occured",
-        variant: "destructive",
-      });
+      toast({ title: "An error occured", variant: "destructive" });
     }
   };
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">
-          <FileEditIcon className="w-4 h-4" />
-        </Button>
+        <Button size="sm">Add New Link</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit URL</DialogTitle>
+          <DialogTitle>Shorten New URL</DialogTitle>
           <DialogDescription>
             Make changes to your url here. Click save when you&apos;re done.
           </DialogDescription>
@@ -62,7 +62,7 @@ export function DialogDemo({ id, og, su }: Props) {
             <Input
               id="name"
               className="col-span-3"
-              onChange={(e) => setOriginalUrl(e.target.value)}
+              onChange={(e) => setUrl(e.target.value)}
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
@@ -70,21 +70,22 @@ export function DialogDemo({ id, og, su }: Props) {
               Slug
             </Label>
             <Input
-              id="url"
+              id="code"
               className="col-span-3"
-              onChange={(e) => setShortUrl(e.target.value)}
+              onChange={(e) => setCode(e.target.value)}
             />
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" onClick={handleUpdate}>
-            Save changes
+          <Button type="submit" onClick={handleCreate}>
+            Create
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
+
 function FileEditIcon(
   props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>
 ) {

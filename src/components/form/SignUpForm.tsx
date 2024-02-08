@@ -50,12 +50,9 @@ const SignUpForm = () => {
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
     try {
       const response = await axios.post("/api/auth/user", values);
-      console.log("response= ", response, "status", response.status);
-
       if (response.status === 201) {
         try {
           const response = await axios.post("/api/send-mail", values);
-          console.log("email verification response:", response);
           router.push("/sign-in");
           toast({
             title: "A verification email has been sent to your email address",

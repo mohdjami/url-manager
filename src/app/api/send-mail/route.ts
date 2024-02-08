@@ -2,31 +2,16 @@
 import sgMail from "@sendgrid/mail";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
+import { produceMessage } from "@/app/kafka/producer";
+import { startMessageConsumer } from "@/app/kafka/consumer";
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { email } = body;
-    const dbUser = await db.user.findUnique({
-      where: {
-        email: email,
-      },
-    });
-    if (!dbUser) {
-      return NextResponse.json(
-        { user: null, message: "user not found" },
-        { status: 404 }
-      );
-    }
-    const token = dbUser.id.toString();
-    console.log("token for email verification is=", token);
-    if (dbUser) {
-      // Send verification email
-      await sendEmail(email, token);
-      console.log("email sent");
-    } else {
-      console.log("email not sent email= ", email);
-    }
+    startMessageConsumer();
+
+    produceMessage("EMAILS", email);
 
     return NextResponse.json(
       {
@@ -52,8 +37,6 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const sendEmail = async (email: string, userId: string) => {
   const verificationUrl = `${process.env.NEXT_PUBLIC_URL}/api/tokens/verify-email?token=${userId}`;
-  console.log("url=", verificationUrl);
-
   const msg = {
     from: "mohdjamikhann@gmail.com",
     to: email,
@@ -63,7 +46,6 @@ const sendEmail = async (email: string, userId: string) => {
 
   try {
     await sgMail.send(msg);
-    console.log("Email sent");
   } catch (error) {
     console.error(error);
   }

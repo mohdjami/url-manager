@@ -20,6 +20,7 @@ import {
 import { JSX, SVGProps, useEffect, useState } from "react";
 import { useToast } from "./ui/use-toast";
 import { DialogDemo } from "./edit-dialogue";
+import { AddNewUrl } from "./add-new-dialogue";
 
 export default function Dashboard() {
   const [urls, setUrls] = useState([]);
@@ -76,7 +77,7 @@ export default function Dashboard() {
           <form className="flex-1">
             <Input placeholder="Search links..." />
           </form>
-          <Button size="sm">Add New Link</Button>
+          <AddNewUrl />
         </div>
         <div className="w-full overflow-auto">
           <Table>

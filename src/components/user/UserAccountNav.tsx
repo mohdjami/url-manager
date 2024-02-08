@@ -13,6 +13,7 @@ const UserAccountNav = () => {
         })
       }
       variant="destructive"
+      className="dark:text-white"
     >
       Sign Out
     </Button>

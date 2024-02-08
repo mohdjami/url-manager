@@ -41,7 +41,9 @@ export async function GET(req: NextRequest) {
         shortUrl: slug,
       },
       data: {
-        clicks: count,
+        clicks: {
+          increment: 1,
+        },
       },
     });
     return NextResponse.redirect(url?.originalUrl || "/", {

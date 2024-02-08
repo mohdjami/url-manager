@@ -53,7 +53,7 @@ const SignUpForm = () => {
   //
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
     try {
-      const response = await axios.post("/api/createUser", values);
+      const response = await axios.post("/api/auth/user", values);
       console.log("response= ", response, "status", response.status);
 
       if (response.status === 201) {

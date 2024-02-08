@@ -60,8 +60,50 @@ export const authOptions: AuthOptions = {
     // signOut: "/signout",
   },
   callbacks: {
-    session({ session, user }) {
+    async session({ token, session }) {
+      if (token) {
+        session.user = {
+          ...session.user,
+          id: token.id + "",
+          name: token.name,
+          email: token.email,
+          image: token.picture,
+        };
+      }
+
       return session;
+    },
+    async jwt({ token, user }) {
+      if (token.email !== null) {
+        const dbUser = await db.user.findUnique({
+          where: { email: token.email },
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+          },
+        });
+
+        if (!dbUser) {
+          if (user) {
+            token.id = user?.id;
+          }
+          // Ensure that token always has an id property
+          if (!token.id) {
+            throw new Error("User id is missing");
+          }
+          return token;
+        }
+        return {
+          id: dbUser.id,
+          name: dbUser.name,
+          email: dbUser.email,
+          picture: dbUser.image,
+        };
+      }
+      // If token.email is null, throw an error instead of returning undefined
+      throw new Error("Token email is null");
     },
   },
 };

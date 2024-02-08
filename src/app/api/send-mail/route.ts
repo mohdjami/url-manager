@@ -51,7 +51,7 @@ if (!process.env.SENDGRID_API_KEY) {
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const sendEmail = async (email: string, userId: string) => {
-  const verificationUrl = `${process.env.NEXT_PUBLIC_URL}/api/verify-email?token=${userId}`;
+  const verificationUrl = `${process.env.NEXT_PUBLIC_URL}/api/tokens/verify-email?token=${userId}`;
   console.log("url=", verificationUrl);
 
   const msg = {

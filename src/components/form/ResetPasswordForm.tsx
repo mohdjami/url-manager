@@ -48,7 +48,7 @@ const ResetPassword = () => {
   useEffect(() => {
     const verify = async () => {
       if (token !== null && email !== null) {
-        const response = await axios.post("/api/verify-token", {
+        const response = await axios.post("/api/tkens/verify-token", {
           token,
           email,
         });
@@ -76,7 +76,7 @@ const ResetPassword = () => {
       console.log("data on submit reset button", data);
       // console.log(token);
       try {
-        const response = await axios.post("/api/reset-password", {
+        const response = await axios.post("/api/auth/reset-password", {
           ...data,
           token,
           email,

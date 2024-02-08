@@ -42,7 +42,7 @@ const SignInForm = () => {
 
   const verifyEmail = async (email: string) => {
     return axios.post(
-      "/api/isVarified",
+      "/api/verified",
       { email },
       { headers: { "Content-Type": "application/json" } }
     );
@@ -75,7 +75,7 @@ const SignInForm = () => {
         const response = await verifyEmail(values.email);
 
         if (response.status === 200) {
-          router.push("/admin");
+          router.push("/dashboard");
           router.refresh();
         } else {
           toast({

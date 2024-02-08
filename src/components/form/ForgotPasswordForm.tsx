@@ -32,7 +32,7 @@ const ForgotPassword = () => {
   const onSubmit = async (values: z.infer<typeof Schema>) => {
     console.log("values of forgot password", values);
     try {
-      const response = await axios.post("/api/forgot-password", values, {
+      const response = await axios.post("/api/auth/forgot-password", values, {
         headers: {
           "Content-Type": "application/json",
         },

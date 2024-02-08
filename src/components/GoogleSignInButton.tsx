@@ -13,7 +13,7 @@ const GoogleSignInButton: React.FC<ButtonProps> = ({ children }) => {
       disabled={isLoading}
       onClick={async () => {
         setLoading(true);
-        await signIn("google", { callbackUrl: "/admin" });
+        await signIn("google", { callbackUrl: "/dashboard" });
         setLoading(false);
       }}
       className="flex items-center space-x-2 w-full"

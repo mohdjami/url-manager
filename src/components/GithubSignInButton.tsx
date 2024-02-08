@@ -14,7 +14,7 @@ const GithubSignInButton: FC<GithubSignInButtonProps> = ({ children }) => {
       disabled={isLoading}
       onClick={async () => {
         setLoading(true);
-        await signIn("github", { callbackUrl: "/admin" });
+        await signIn("github", { callbackUrl: "/dashboard" });
         setLoading(false);
       }}
       className="flex items-center space-x-2 w-full"

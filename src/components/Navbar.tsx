@@ -3,7 +3,7 @@ import { Button, buttonVariants } from "./ui/button";
 import { HandMetal } from "lucide-react";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
-import UserAccountNav from "./UserAccountNav";
+import UserAccountNav from "./user/UserAccountNav";
 import { ModeToggle } from "./mode-toggle";
 
 const Navbar = async () => {

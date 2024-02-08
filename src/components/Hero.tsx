@@ -1,9 +1,36 @@
+"use client";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { JSX, SVGProps } from "react";
+import { JSX, SVGProps, useState } from "react";
+import createShortUrl from "@/lib/urls";
+import { Card, CardDescription } from "./ui/card";
+//Send the url to backend and create a short url and return it to the user
+//The user can then share the short url with the world
 
 export default function Hero() {
+  const [url, setUrl] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSucces] = useState(false);
+  let [code, setCode] = useState("");
+
+  const handleSubmit = async (event: { preventDefault: () => void }) => {
+    event.preventDefault();
+    const res = await fetch("api/urls/create-url", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ url, code }),
+    });
+    const data = await res.json();
+    setCode(data.code);
+    if (!res.ok) throw new Error(data.message || "Something went wrong!");
+    else {
+      setSucces(true);
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-[100dvh]">
       <main className="flex-1">
@@ -19,14 +46,43 @@ export default function Hero() {
                 </p>
               </div>
               <div className="space-y-2 min-w-[300px]">
-                <form className="flex space-x-2">
+                <form className="flex space-x-2" onSubmit={handleSubmit}>
                   <Input
                     className="max-w-lg flex-1"
                     placeholder="Enter your URL"
                     type="url"
+                    onChange={(e) => {
+                      setUrl(e.target.value);
+                    }}
                   />
-                  <Button type="submit">Shorten</Button>
+                  <Button type="submit" onClick={handleSubmit}>
+                    Shorten
+                  </Button>
                 </form>
+                <p>Or Create a Custom URL</p>
+                <form className="flex space-x-2" onSubmit={handleSubmit}>
+                  <p>{`${process.env.NEXT_PUBLIC_URL}/up/`}</p>
+                  <Input
+                    className="max-w-lg flex-1"
+                    placeholder="Custom"
+                    type="name"
+                    onChange={(e) => {
+                      setCode(e.target.value);
+                    }}
+                  />
+                  <Button type="submit" onClick={handleSubmit}>
+                    Shorten
+                  </Button>
+                </form>
+                <Card>
+                  <CardDescription>
+                    {success ? (
+                      <p>{`${process.env.NEXT_PUBLIC_URL}/up/${code}`}</p>
+                    ) : (
+                      <p>Create A url</p>
+                    )}
+                  </CardDescription>
+                </Card>
               </div>
             </div>
           </div>

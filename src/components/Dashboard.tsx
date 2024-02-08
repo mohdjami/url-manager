@@ -62,7 +62,7 @@ export default function Dashboard() {
             <TableBody>
               {urls.map((url: any) => {
                 return (
-                  <TableRow className="divide-y rounded-lg">
+                  <TableRow className="divide-y rounded-lg" key={url.id}>
                     <TableCell className="font-semibold" typeof="url">
                       <Link
                         href={`${process.env.NEXT_PUBLIC_URL}/up/${url.shortUrl}`}

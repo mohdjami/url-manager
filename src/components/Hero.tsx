@@ -31,6 +31,7 @@ export default function Hero() {
     } else {
       setSucces(true);
       toast({ title: "Shortened URL has been created", variant: "default" });
+      window.location.reload();
     }
   };
 

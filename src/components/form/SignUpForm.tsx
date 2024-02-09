@@ -71,7 +71,7 @@ const SignUpForm = () => {
 
           toast({
             title: "Error, try again",
-            description: "Oops Something went wrong",
+            description: "̥ Something went wrong",
             variant: "destructive",
           });
         }

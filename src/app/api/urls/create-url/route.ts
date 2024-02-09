@@ -1,5 +1,6 @@
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { redis } from "@/lib/redis";
 import createShortUrl from "@/lib/urls";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
@@ -7,6 +8,7 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
+
     let { url, code } = await req.json();
     if (!session?.user.id) {
       return NextResponse.json(
@@ -40,6 +42,21 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           error: "This slug is already in use. Please choose another one.",
+        },
+        {
+          status: 409,
+        }
+      );
+    }
+    const urlExists = await db.url.findFirst({
+      where: {
+        originalUrl: url,
+      },
+    });
+    if (urlExists) {
+      return NextResponse.json(
+        {
+          error: "This URL is already shortened",
         },
         {
           status: 409,

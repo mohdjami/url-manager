@@ -26,7 +26,6 @@ const sendEmail = async (email: string, url: string) => {
 
   try {
     await sgMail.send(msg);
-    console.log("Email sent");
   } catch (error) {
     console.error(error);
   }
@@ -60,7 +59,6 @@ export async function forgotPassword(req: NextRequest, res: NextResponse) {
       { status: 200 }
     );
   } catch (error) {
-    console.log("error in sending email:", error);
     return NextResponse.json(
       { user: null, message: "something went wrong" },
       { status: 500 }

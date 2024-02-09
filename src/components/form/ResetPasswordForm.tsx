@@ -46,20 +46,16 @@ const ResetPassword = () => {
   useEffect(() => {
     const verify = async () => {
       if (token !== null && email !== null) {
-        const response = await axios.post("/api/tkens/verify-token", {
+        const response = await axios.post("/api/tokens/verify-token", {
           token,
           email,
         });
-        console.log("response=", response, "response.data=", response.data);
-        console.log("valid=", response.data.isValid);
         setIsValid(response.data.isValid);
       }
     };
 
     verify();
   }, [token, email]);
-  console.log("token", token, "emai:", email);
-  console.log("valid=", isValid);
   if (isValid === null) {
     return <div>Verifying token...</div>;
   } else if (!isValid) {
@@ -69,12 +65,9 @@ const ResetPassword = () => {
       </div>
     );
   } else {
-    console.log("is valid later:", isValid);
     const onSubmit = async (data: z.infer<typeof Schema>) => {
-      console.log("data on submit reset button", data);
-      // console.log(token);
       try {
-        const response = await axios.post("/api/auth/reset-password", {
+        await axios.post("/api/auth/reset-password", {
           ...data,
           token,
           email,
@@ -103,7 +96,9 @@ const ResetPassword = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel className="text-center text-sm text-gray-600 mt-2">
+                    Password
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="password"
@@ -120,7 +115,9 @@ const ResetPassword = () => {
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Re-Enter your password</FormLabel>
+                  <FormLabel className="text-center text-sm text-gray-600 mt-2">
+                    Re-Enter your password
+                  </FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Re-Enter your password"
@@ -134,8 +131,8 @@ const ResetPassword = () => {
             />
           </div>
 
-          <Button className="w-full mt-6" type="submit">
-            Submit{" "}
+          <Button className="w-full mt-6" variant="outline" type="submit">
+            Submit
           </Button>
         </form>
       </Form>

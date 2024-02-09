@@ -5,16 +5,18 @@ import { Button } from "@/components/ui/button";
 import { JSX, SVGProps, useState } from "react";
 import { Card, CardContent, CardDescription } from "./ui/card";
 import { useToast } from "./ui/use-toast";
-
+import User from "./user/User";
 export default function Hero() {
   const [url, setUrl] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [success, setSucces] = useState(false);
   const { toast } = useToast();
+
   let [code, setCode] = useState("");
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
+
     const res = await fetch("api/urls/create-url", {
       method: "POST",
       headers: {

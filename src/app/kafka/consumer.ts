@@ -17,7 +17,7 @@ export const kafka = new Kafka({
   sasl: {
     mechanism: "plain",
     username: "avnadmin",
-    password: process.env.KAFKA_PASSWORD || "",
+    password: process.env.KAFKA_PASSWORD!,
   },
 });
 export async function startMessageConsumer() {
@@ -39,21 +39,15 @@ export async function startMessageConsumer() {
           return;
         }
         const token = dbUser.id.toString();
-        console.log("token for email verification is=", token);
         if (dbUser) {
-          // Send verification email
           try {
             await sendEmail(message.value.toString(), token);
             console.log("email sent");
           } catch (error) {
-            console.log(
-              "email not sent email= ",
-              message.value.toString(),
-              error
-            );
+            console.log("email not sent", message.value.toString(), error);
           }
         } else {
-          console.log("email not sent email= ", message.value.toString());
+          console.log("email not sent ", message.value.toString());
         }
       } catch (error) {
         console.log("Something is wrong");

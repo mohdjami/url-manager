@@ -7,7 +7,6 @@ export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
     const { id, originalUrl, shortUrl } = await req.json();
-    console.log(id, originalUrl, shortUrl);
     const url = await db.url.findUnique({
       where: {
         id,

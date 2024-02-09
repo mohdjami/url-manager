@@ -63,7 +63,7 @@ model VerificationToken {
 
 model Url {
   id          String   @id @default(cuid())
-  originalUrl String
+  originalUrl String   @unique
   shortUrl    String @db.VarChar(256) @unique
   createdAt   DateTime @default(now())
   clicks      Int @default(0) 

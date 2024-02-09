@@ -28,25 +28,3 @@ export async function POST(req: Request) {
     );
   }
 }
-
-if (!process.env.SENDGRID_API_KEY) {
-  throw new Error("SENDGRID_API_KEY environment variable is not set");
-}
-
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-const sendEmail = async (email: string, userId: string) => {
-  const verificationUrl = `${process.env.NEXT_PUBLIC_URL}/api/tokens/verify-email?token=${userId}`;
-  const msg = {
-    from: "mohdjamikhann@gmail.com",
-    to: email,
-    subject: "Verify Your Email Address",
-    html: `<p>Please click <a href="${verificationUrl}">here</a> to verify your email address.</p>`,
-  };
-
-  try {
-    await sgMail.send(msg);
-  } catch (error) {
-    console.error(error);
-  }
-};

@@ -20,7 +20,6 @@ export function AddNewUrl() {
   const [code, setCode] = useState<string>("");
   const { toast } = useToast();
   const handleCreate = async () => {
-    console.log(url, code);
     try {
       const res = await fetch("api/urls/create-url", {
         method: "POST",
@@ -31,7 +30,6 @@ export function AddNewUrl() {
       });
       const data = await res.json();
       setCode(data.code);
-      console.log(data);
       if (!res.ok) {
         toast({ title: data.error, variant: "destructive" });
       } else {

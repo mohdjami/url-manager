@@ -36,7 +36,6 @@ const ForgotPassword = () => {
           "Content-Type": "application/json",
         },
       });
-      console.log("response on submit forgot pass form", response);
       toast({
         title: "Success",
         description: "Password reset link has been sent to your mail",
@@ -44,7 +43,6 @@ const ForgotPassword = () => {
       });
       router.push("/sign-in");
     } catch (error) {
-      console.log("error on sending email to api", error);
       if (axios.isAxiosError(error) && error.response?.status === 409) {
         toast({
           title: "Error, try again",
@@ -59,7 +57,6 @@ const ForgotPassword = () => {
         });
         console.error(error);
       }
-      console.log("error on submit", error);
     }
   };
 
@@ -72,7 +69,9 @@ const ForgotPassword = () => {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Enter your registered email</FormLabel>
+                <FormLabel className="text-center text-sm text-gray-600 mt-2">
+                  Enter your registered email
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="email" {...field} />
                 </FormControl>
@@ -81,7 +80,7 @@ const ForgotPassword = () => {
             )}
           />
         </div>
-        <Button type="submit" className="w-full mt-6">
+        <Button type="submit" variant="outline" className="w-full mt-6">
           Submit
         </Button>
       </form>

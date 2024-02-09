@@ -59,11 +59,14 @@ const SignUpForm = () => {
             variant: "default",
           });
         } catch (error) {
-          console.log("error in sending email verification", error);
+          toast({
+            title: "Error, try again",
+            description: "Oops Something went wrong",
+            variant: "destructive",
+          });
         }
       }
     } catch (error) {
-      console.log("error in creating user", error);
       toast({
         title: "Error",
         description: "Oops Something went wrong",

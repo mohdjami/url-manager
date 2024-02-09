@@ -1,5 +1,6 @@
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { redis } from "@/lib/redis";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
@@ -16,6 +17,7 @@ export async function GET(req: Request) {
         userId: session?.user.id,
       },
     });
+
     return NextResponse.json({
       urls,
     });

@@ -1,12 +1,11 @@
 import { db } from "@/lib/db";
+import { redis } from "@/lib/redis";
 import { NextRequest, NextResponse } from "next/server";
-let count: number = 0;
 
 export async function GET(req: NextRequest) {
   try {
     const slug = req.url.split("/").pop();
-    count++;
-    console.log(count);
+    const cachedUrl = await redis.get(slug!);
     if (!slug) {
       return NextResponse.json(
         {
@@ -17,6 +16,14 @@ export async function GET(req: NextRequest) {
         }
       );
     }
+    if (cachedUrl) {
+      return NextResponse.redirect(cachedUrl || "/", {
+        headers: {
+          "Cache-Control": "public, max-age=31536000, immutable",
+        },
+      });
+    }
+
     const url = await db.url.findUnique({
       where: {
         shortUrl: slug,
@@ -24,8 +31,10 @@ export async function GET(req: NextRequest) {
       select: {
         originalUrl: true,
         clicks: true,
+        shortUrl: true,
       },
     });
+
     if (!url) {
       return NextResponse.json(
         {
@@ -36,7 +45,7 @@ export async function GET(req: NextRequest) {
         }
       );
     }
-    await db.url.update({
+    const clicks = await db.url.update({
       where: {
         shortUrl: slug,
       },
@@ -45,7 +54,11 @@ export async function GET(req: NextRequest) {
           increment: 1,
         },
       },
+      select: {
+        clicks: true,
+      },
     });
+    const updatedCache = await redis.set(slug, url?.originalUrl);
     return NextResponse.redirect(url?.originalUrl || "/", {
       headers: {
         "Cache-Control": "public, max-age=31536000, immutable",

@@ -4,7 +4,6 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
     const { token, email } = await req.json();
-    console.log("verify wala = ", token, email);
 
     const user = await db.user.findUnique({
       where: { email: email },
@@ -23,14 +22,12 @@ export async function POST(req: NextRequest, res: NextResponse) {
           { status: 200 }
         );
       } else {
-        console.log("token expired");
         return NextResponse.json(
           { user: null, message: "Invalid token or token expired" },
           { status: 401 }
         );
       }
     } else {
-      console.log("user does not exist");
       return NextResponse.json(
         { user: null, message: "User does not exist" },
         { status: 404 }

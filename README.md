@@ -34,12 +34,6 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 # Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
-# Nextjs-authentication
+# URL SHORTENER
 
-SignIn and SignUp page with Nextjs , Prisma , Supabase, Next-auth and Shadcn library
-
-> > > > > > > cc65e89baa74eb05dc7bbfd53dbcc8b22c225313
-
-Add edit and delete functionality
-Add link to the url
-fix clicks
+Created a url shortener to shorten the long url Blazingly fast.

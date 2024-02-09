@@ -18,10 +18,7 @@ export async function GET(req: Request) {
       );
     }
     const id = token;
-    console.log("token and id after email verification clicked", id);
     const user = await db.user.findUnique({ where: { id } });
-    //what i should do is that i should find the user by unique email and check if the token matches
-    //but i dont need to do that also i just need to put the usr with the id to update the field
     if (!user) {
       return NextResponse.json(
         {
@@ -32,7 +29,6 @@ export async function GET(req: Request) {
       );
     }
 
-    // Update the user's emailVerified field in the database
     await db.user.update({
       where: { id: user.id },
       data: { emailVerified: new Date() },

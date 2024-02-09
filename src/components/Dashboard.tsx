@@ -35,7 +35,6 @@ export default function Dashboard() {
         },
         body: JSON.stringify({ id: id }),
       });
-      console.log(await res.json());
       toast({
         title: "Deleted Successfully",
         variant: "default",

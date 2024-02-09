@@ -1,22 +1,13 @@
-import { Kafka, Producer } from "kafkajs";
-import path from "path";
-import fs from "fs";
+import { Kafka, Producer, logLevel } from "kafkajs";
 export const kafka = new Kafka({
-  clientId: "url-shortener",
-  brokers: [process.env.KAFKA_BROKER || ""],
-  ssl: {
-    ca: [
-      fs.readFileSync(
-        path.resolve(process.env.CA_PEM_PATH || "./ca.pem"),
-        "utf-8"
-      ),
-    ],
-  },
+  brokers: [process.env.KAFKA_BROKER!],
+  ssl: true,
   sasl: {
-    mechanism: "plain",
-    username: "avnadmin",
+    mechanism: "scram-sha-256",
+    username: process.env.KAFKA_USERNAME!,
     password: process.env.KAFKA_PASSWORD!,
   },
+  logLevel: logLevel.ERROR,
 });
 
 let producer: null | Producer;

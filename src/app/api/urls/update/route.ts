@@ -7,6 +7,17 @@ export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
     const { id, originalUrl, shortUrl } = await req.json();
+    const slug = await db.url.findUnique({
+      where: {
+        shortUrl,
+      },
+    });
+    if (slug) {
+      return NextResponse.json(
+        { message: "Slug already exists" },
+        { status: 400 }
+      );
+    }
     const url = await db.url.findUnique({
       where: {
         id,

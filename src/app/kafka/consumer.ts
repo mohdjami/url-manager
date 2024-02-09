@@ -28,6 +28,7 @@ export async function startMessageConsumer() {
           },
         });
         if (!dbUser) {
+          console.log("User not found");
           return;
         }
         const token = dbUser.id.toString();

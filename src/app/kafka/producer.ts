@@ -22,6 +22,7 @@ export const getProducer = async () => {
 
 export const produceMessage = async (topic: string, email: string) => {
   const producer = await getProducer();
+  console.log("message produced succesfully");
   await producer.send({
     topic,
     messages: [{ key: `email- ${Date.now()}`, value: email }],

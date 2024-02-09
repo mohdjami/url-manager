@@ -21,6 +21,7 @@ export async function startMessageConsumer() {
       console.log(`New EMAIL: ${message}`);
       if (!message.value) return;
       try {
+        console.log("email:", message.value.toString());
         const dbUser = await db.user.findUnique({
           where: {
             email: message.value.toString(),
@@ -63,8 +64,8 @@ if (!process.env.SENDGRID_API_KEY) {
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-const sendEmail = async (email: string, userId: string) => {
-  const verificationUrl = `${process.env.NEXT_PUBLIC_URL}/api/tokens/verify-email?token=${userId}`;
+const sendEmail = async (email: string, token: string) => {
+  const verificationUrl = `${process.env.NEXT_PUBLIC_URL}/api/tokens/verify-email?token=${token}`;
   const msg = {
     from: "mohdjamikhann@gmail.com",
     to: email,

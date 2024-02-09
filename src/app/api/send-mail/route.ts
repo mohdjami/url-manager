@@ -11,7 +11,8 @@ export async function POST(req: Request) {
     const { email } = body;
     await startMessageConsumer();
 
-    produceMessage("EMAILS", email);
+    await produceMessage("EMAILS", email);
+    console.log("consumer and email ");
 
     return NextResponse.json(
       {

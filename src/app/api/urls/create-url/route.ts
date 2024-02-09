@@ -48,7 +48,7 @@ export async function POST(req: Request) {
         }
       );
     }
-    const urlExists = await db.url.findFirst({
+    const urlExists = await db.url.findUnique({
       where: {
         originalUrl: url,
       },

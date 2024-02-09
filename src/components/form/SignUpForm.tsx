@@ -55,7 +55,8 @@ const SignUpForm = () => {
           const response = await axios.post("/api/send-mail", values);
           router.push("/sign-in");
           toast({
-            title: "A verification email has been sent to your email address",
+            title:
+              "A verification email has been sent to your email address. It may take some time to appear in your inbox.",
             variant: "default",
           });
         } catch (error) {

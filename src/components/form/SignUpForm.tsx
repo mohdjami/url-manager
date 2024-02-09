@@ -19,6 +19,8 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import GithubSignInButton from "../GithubSignInButton";
+import { useState } from "react";
+import { Icons } from "../Icons";
 
 const FormSchema = z
   .object({
@@ -38,6 +40,7 @@ const FormSchema = z
 const SignUpForm = () => {
   const router = useRouter();
   const { toast } = useToast();
+  const [loading, isLoading] = useState(false);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -49,8 +52,12 @@ const SignUpForm = () => {
   });
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
     try {
+      isLoading(true);
       const response = await axios.post("/api/auth/user", values);
+
       if (response.status === 201) {
+        isLoading(false);
+
         try {
           const response = await axios.post("/api/send-mail", values);
           router.push("/sign-in");
@@ -60,6 +67,8 @@ const SignUpForm = () => {
             variant: "default",
           });
         } catch (error) {
+          isLoading(false);
+
           toast({
             title: "Error, try again",
             description: "Oops Something went wrong",
@@ -68,9 +77,10 @@ const SignUpForm = () => {
         }
       }
     } catch (error) {
+      isLoading(false);
+
       toast({
-        title: "Error",
-        description: "Oops Something went wrong",
+        title: "User Already Exists Or Something Went wrong",
         variant: "destructive",
       });
     }
@@ -151,13 +161,18 @@ const SignUpForm = () => {
             )}
           />
         </div>
+
         <div style={{ marginBottom: "10px" }}>
           <Button
             className="flex items-center space-x-2 w-full md:block hidden  "
             type="submit"
             variant="outline"
           >
-            Sign up
+            {loading ? (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <p>Sign up</p>
+            )}
           </Button>
           <Button
             className="w-full mt-4 md:mt-8 lg:mt-10 block lg:hidden"

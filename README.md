@@ -1,39 +1,38 @@
-<<<<<<< HEAD
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+URL Shortener with MERN and Additional Features
 
-## Getting Started
+This is a URL shortener application built with the MERN stack (Next.js , Prisma, Supabase, Kafka, Redis, Nextauth, Tailwind) offering advanced functionalities beyond basic URL shortening.
 
-First, run the development server:
+Core Features:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+    Shorten URLs: Convert long URLs into shorter, manageable links.
+    Redirection: Clicking the shortened URL instantly redirects to the original long URL.
+    User Authentication: Securely manage shortened URLs via user accounts.
+    User Dashboard: View, edit, delete, and track analytics for your shortened URLs.
+    Error Handling: Gracefully handle invalid URLs, server errors, and edge cases.
+    Security: Implement best practices for secure authentication and data handling.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Additional Features:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+    Kafka Message Queue: Send asynchronous emails using a message queue for improved performance.
+    Redis Cache: Cache frequently used URLs for faster response times.
+    Next.js Integration: Leverage Next.js for server-side rendering and improved SEO.
+    Analytics: Track the number of clicks and other relevant metrics for each shortened URL.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Deployment:
 
-## Learn More
+The application is deployed at https://mjkm.vercel.app.
 
-To learn more about Next.js, take a look at the following resources:
+Documentation:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+    This README provides a brief overview of the application.
+    For detailed information, refer to the code repository, available upon request.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Contribution:
 
-## Deploy on Vercel
+This application is open-source. Feel free to contribute to its development!
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Further Enhancements:
 
-# Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-
-# URL SHORTENER
-
-Created a url shortener to shorten the long url Blazingly fast.
+    Implement more advanced analytics.
+    Integrate custom domain functionality.
+    Add social sharing features.

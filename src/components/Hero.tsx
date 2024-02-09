@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { JSX, SVGProps, useState } from "react";
-import { Card, CardContent, CardDescription } from "./ui/card";
+import { Card, CardContent, CardDescription, CardTitle } from "./ui/card";
 import { useToast } from "./ui/use-toast";
 import User from "./user/User";
 export default function Hero() {
@@ -80,18 +80,20 @@ export default function Hero() {
                 </form>
                 <Card>
                   <CardDescription>
-                    {code && success ? (
-                      <Link
-                        className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400"
-                        href={`${process.env.NEXT_PUBLIC_URL}/up/${code}`}
-                      >
-                        {`${process.env.NEXT_PUBLIC_URL}/up/${code}`}
-                      </Link>
-                    ) : (
-                      <CardContent>
-                        <p>Create a URL</p>
-                      </CardContent>
-                    )}
+                    <CardTitle className="py-5">
+                      {code && success ? (
+                        <Link
+                          className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400"
+                          href={`${process.env.NEXT_PUBLIC_URL}/up/${code}`}
+                        >
+                          {`${process.env.NEXT_PUBLIC_URL}/up/${code}`}
+                        </Link>
+                      ) : (
+                        <CardContent>
+                          <p>Create a URL</p>
+                        </CardContent>
+                      )}
+                    </CardTitle>
                   </CardDescription>
                 </Card>
               </div>

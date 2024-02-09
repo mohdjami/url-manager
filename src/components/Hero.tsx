@@ -2,14 +2,14 @@
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { JSX, SVGProps, useState } from "react";
+import { JSX, SVGProps, use, useState } from "react";
 import { Card, CardContent, CardDescription, CardTitle } from "./ui/card";
 import { useToast } from "./ui/use-toast";
-import User from "./user/User";
 export default function Hero() {
   const [url, setUrl] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [success, setSucces] = useState(false);
+  const [displayCode, setDisplayCode] = useState("");
   const { toast } = useToast();
 
   let [code, setCode] = useState("");
@@ -26,11 +26,13 @@ export default function Hero() {
     });
     const data = await res.json();
     setCode(data.code);
+    setDisplayCode(data.code);
     if (!res.ok) {
       toast({ title: data.error, variant: "destructive" });
     } else {
       setSucces(true);
       toast({ title: "Shortened URL has been created", variant: "default" });
+      setCode("");
     }
   };
 
@@ -81,12 +83,12 @@ export default function Hero() {
                 <Card>
                   <CardDescription>
                     <CardTitle className="py-5">
-                      {code && success ? (
+                      {displayCode || success ? (
                         <Link
                           className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400"
-                          href={`${process.env.NEXT_PUBLIC_URL}/up/${code}`}
+                          href={`${process.env.NEXT_PUBLIC_URL}/up/${displayCode}`}
                         >
-                          {`${process.env.NEXT_PUBLIC_URL}/up/${code}`}
+                          {`${process.env.NEXT_PUBLIC_URL}/up/${displayCode}`}
                         </Link>
                       ) : (
                         <CardContent>

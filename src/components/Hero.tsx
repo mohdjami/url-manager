@@ -51,9 +51,10 @@ export default function Hero() {
               <div className="space-y-2 min-w-[300px]">
                 <form className="flex space-x-2">
                   <div className="flex flex-row justify-between">
-                    <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
+                    <p className="mx-auto max-w-[700px] text-black md:text-xl dark:text-white">
                       {`${process.env.NEXT_PUBLIC_URL}/up/`}
                     </p>
+                    &nbsp;
                     <Input
                       className="max-w-lg flex-1"
                       placeholder="Custom"
@@ -80,11 +81,11 @@ export default function Hero() {
                 <Card>
                   <CardDescription>
                     {code && success ? (
-                      <Link href={`${process.env.NEXT_PUBLIC_URL}/up/${code}`}>
-                        {" "}
-                        <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                          {`${process.env.NEXT_PUBLIC_URL}/up/${code}`}
-                        </p>
+                      <Link
+                        className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400"
+                        href={`${process.env.NEXT_PUBLIC_URL}/up/${code}`}
+                      >
+                        {`${process.env.NEXT_PUBLIC_URL}/up/${code}`}
                       </Link>
                     ) : (
                       <CardContent>

@@ -25,7 +25,29 @@ import { AddNewUrl } from "./add-new-dialogue";
 export default function Dashboard() {
   const [urls, setUrls] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState("");
   const { toast } = useToast();
+
+  useEffect(() => {
+    async function searchUrls() {
+      try {
+        setLoading(true);
+        const res = await fetch("api/urls/search", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ search: search }),
+        });
+        const data = await res.json();
+        setUrls(data.urls);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+      }
+    }
+    searchUrls();
+  }, [search]);
   const handleDelete = async (id: string) => {
     try {
       const res = await fetch("api/urls/delete", {
@@ -48,20 +70,6 @@ export default function Dashboard() {
     }
   };
 
-  useEffect(() => {
-    async function fetchUrls() {
-      try {
-        setLoading(true);
-        const res = await fetch("api/urls/get-urls");
-        const data = await res.json();
-        setUrls(data.urls);
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-      }
-    }
-    fetchUrls();
-  }, []);
   return (
     <div className="flex flex-col w-full py-10 min-h-screen">
       <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10">
@@ -74,7 +82,12 @@ export default function Dashboard() {
         </div>
         <div className="flex items-center gap-4 mt-8">
           <form className="flex-1">
-            <Input placeholder="Search links..." />
+            <Input
+              placeholder="Search links..."
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
+            />
           </form>
           <AddNewUrl />
         </div>

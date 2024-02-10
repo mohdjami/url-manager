@@ -11,17 +11,11 @@ import {
   CardTitle,
 } from "../ui/card";
 import { useToast } from "../ui/use-toast";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
-const FormSchema = z.object({
-  url: z
-    .string()
-    .min(1, "URL is required")
-    .url("Invalid URL")
-    .startsWith("http://", "URL must start with http://")
-    .startsWith("https://", "URL must start with https://"),
-});
+import createShortUrl from "@/lib/urls";
+import { fetchUrl } from "@/lib/fetchUrl";
+import { z } from "zod";
+import { Icons } from "../Icons";
 
 export default function Hero() {
   const { data: session } = useSession();
@@ -30,39 +24,36 @@ export default function Hero() {
   const [success, setSucces] = useState(false);
   const [displayCode, setDisplayCode] = useState("");
   const { toast } = useToast();
-
   let [code, setCode] = useState("");
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     try {
       event.preventDefault();
-      if (!session) {
-        toast({
-          title: "Please sign in to create a shortened URL",
-          variant: "destructive",
-        });
-      }
-      const parsedUrl = FormSchema.parse({ url });
-
-      const res = await fetch("api/urls/create-url", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ parsedUrl, code }),
-      });
+      setLoading(true);
+      const res = await fetchUrl(url, code);
       const data = await res.json();
       setCode(data.code);
       setDisplayCode(data.code);
       if (!res.ok) {
+        setLoading(false);
         toast({ title: data.error, variant: "destructive" });
       } else {
         setSucces(true);
         toast({ title: "Shortened URL has been created", variant: "default" });
+        setUrl("");
         setCode("");
+        setLoading(false);
       }
     } catch (error) {
-      if (error instanceof z.ZodError) {
+      console.log(error);
+      setLoading(false);
+      if (!session) {
+        toast({
+          title: "You must be signed in to create a URL",
+          variant: "destructive",
+        });
+      } else if (error instanceof z.ZodError) {
+        console.log(error.errors[0].message);
         toast({
           title: error.errors[0].message,
           description: "Urls must start with http:// or https://",
@@ -113,6 +104,7 @@ export default function Hero() {
                           placeholder="Custom"
                           type="name"
                           onChange={(e) => {
+                            console.log(e.target.value);
                             setCode(e.target.value);
                           }}
                         />
@@ -120,18 +112,25 @@ export default function Hero() {
                     </form>
                   </CardTitle>
                   <CardDescription className="py-3">
-                    {" "}
                     <form className="flex space-x-2" onSubmit={handleSubmit}>
                       <Input
                         className="max-w-lg flex-1"
-                        placeholder="Enter your URL"
+                        placeholder={
+                          displayCode || success
+                            ? "Enter your URL"
+                            : "Enter your URL"
+                        }
                         type="url"
                         onChange={(e) => {
                           setUrl(e.target.value);
                         }}
                       />
                       <Button type="submit" onClick={handleSubmit}>
-                        Shorten
+                        {loading ? (
+                          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                          "Shorten"
+                        )}
                       </Button>
                     </form>
                   </CardDescription>

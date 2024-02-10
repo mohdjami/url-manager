@@ -17,7 +17,7 @@ const HeaderRoutes = async () => {
     },
 
     {
-      href: "/#features",
+      href: "/features",
       label: "Features",
     },
   ];

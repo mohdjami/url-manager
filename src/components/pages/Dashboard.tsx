@@ -24,10 +24,6 @@ import { AddNewUrl } from "../dialogs/add-new-dialogue";
 import { DeleteButton } from "../buttons/url-delete-button";
 import { useSession } from "next-auth/react";
 export default function Dashboard() {
-  const { data: session } = useSession();
-  if (!session) {
-    window.location.href = "/sign-in";
-  }
   const [urls, setUrls] = useState([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");

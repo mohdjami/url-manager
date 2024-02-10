@@ -14,30 +14,50 @@ import { Label } from "@/components/ui/label";
 import { useTheme } from "next-themes";
 import { SVGProps, use, useState } from "react";
 import { useToast } from "../ui/use-toast";
+import { fetchUrl } from "@/lib/fetchUrl";
+import { useSession } from "next-auth/react";
+import { z } from "zod";
+import { Icons } from "../Icons";
 
 export function AddNewUrl() {
   const [url, setUrl] = useState<string>("");
   const [code, setCode] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const { data: session } = useSession();
+
   const { toast } = useToast();
+
   const handleCreate = async () => {
     try {
-      const res = await fetch("api/urls/create-url", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ url, code }),
-      });
+      setLoading(true);
+      const res = await fetchUrl(url, code);
       const data = await res.json();
       setCode(data.code);
       if (!res.ok) {
+        setLoading(false);
         toast({ title: data.error, variant: "destructive" });
       } else {
         toast({ title: "Shortened URL has been created", variant: "default" });
+        setUrl("");
+        setCode("");
+        setLoading(false);
       }
-      window.location.reload();
     } catch (error) {
-      toast({ title: "An error occured", variant: "destructive" });
+      console.log(error);
+      setLoading(false);
+      if (!session) {
+        toast({
+          title: "You must be signed in to create a URL",
+          variant: "destructive",
+        });
+      } else if (error instanceof z.ZodError) {
+        console.log(error.errors[0].message);
+        toast({
+          title: error.errors[0].message,
+          description: "Urls must start with http:// or https://",
+          variant: "destructive",
+        });
+      }
     }
   };
   return (
@@ -81,33 +101,14 @@ export function AddNewUrl() {
         </div>
         <DialogFooter>
           <Button type="submit" onClick={handleCreate}>
-            Create
+            {loading ? (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              "Create"
+            )}{" "}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
-}
-
-function FileEditIcon(
-  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>
-) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M4 13.5V4a2 2 0 0 1 2-2h8.5L20 7.5V20a2 2 0 0 1-2 2h-5.5" />
-      <polyline points="14 2 14 8 20 8" />
-      <path d="M10.42 12.61a2.1 2.1 0 1 1 2.97 2.97L7.95 21 4 22l.99-3.95 5.43-5.44Z" />
-    </svg>
   );
 }

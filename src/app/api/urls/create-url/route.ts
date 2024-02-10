@@ -9,7 +9,7 @@ export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
 
-    let { url, code } = await req.json();
+    let { parsedUrl, code } = await req.json();
     if (!session?.user.id) {
       return NextResponse.json(
         {
@@ -20,10 +20,10 @@ export async function POST(req: Request) {
         }
       );
     }
-    if (!url) {
+    if (!parsedUrl) {
       return NextResponse.json(
         {
-          error: "Url is required",
+          error: "parsedUrl is required",
         },
         {
           status: 400,
@@ -50,7 +50,7 @@ export async function POST(req: Request) {
     }
     const urlExists = await db.url.findUnique({
       where: {
-        originalUrl: url,
+        originalUrl: parsedUrl,
       },
     });
     if (urlExists) {
@@ -65,7 +65,7 @@ export async function POST(req: Request) {
     }
     const Url = await db.url.create({
       data: {
-        originalUrl: url,
+        originalUrl: parsedUrl,
         shortUrl: code,
         userId: session.user.id,
       },
@@ -75,6 +75,7 @@ export async function POST(req: Request) {
       code,
     });
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       {
         error: "An error occured",

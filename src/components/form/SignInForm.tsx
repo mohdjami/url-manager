@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
 import GithubSignInButton from "../buttons/GithubSignInButton";
+import { useState } from "react";
 
 const FormSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email"),
@@ -29,6 +30,7 @@ const FormSchema = z.object({
 });
 
 const SignInForm = () => {
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
 
@@ -58,12 +60,14 @@ const SignInForm = () => {
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
     try {
+      setLoading(true);
       const result = await signIn("credentials", {
         email: values.email,
         password: values.password,
         redirect: false,
       });
       if (result?.error === "CredentialsSignin") {
+        setLoading(false);
         toast({
           title: "Either email or password is wrong",
           description:
@@ -75,6 +79,7 @@ const SignInForm = () => {
         router.refresh();
       }
     } catch (error) {
+      setLoading(false);
       handleError(error);
     }
   };

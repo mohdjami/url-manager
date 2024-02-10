@@ -22,7 +22,7 @@ const FormSchema = z.object({
     .startsWith("https://", "URL must start with https://"),
 });
 
-export default function Hero(props) {
+export default function Hero() {
   const [url, setUrl] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [success, setSucces] = useState(false);

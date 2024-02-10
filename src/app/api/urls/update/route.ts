@@ -36,6 +36,18 @@ export async function POST(req: Request) {
         { message: "Missing parameter" },
         { status: 400 }
       );
+
+    if (url.originalUrl !== originalUrl) {
+      return NextResponse.json(
+        {
+          error: "You can't change the original url",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
     await db.url.updateMany({
       where: {
         id,

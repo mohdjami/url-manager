@@ -62,6 +62,7 @@ export function DialogDemo({ id, og, su }: Props) {
             <Input
               id="name"
               className="col-span-3"
+              defaultValue="Youroriginalurl.com"
               onChange={(e) => setOriginalUrl(e.target.value)}
             />
           </div>
@@ -72,6 +73,7 @@ export function DialogDemo({ id, og, su }: Props) {
             <Input
               id="url"
               className="col-span-3"
+              defaultValue="Slug for your url"
               onChange={(e) => setShortUrl(e.target.value)}
             />
           </div>

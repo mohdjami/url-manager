@@ -62,6 +62,8 @@ export function AddNewUrl() {
             <Input
               id="name"
               className="col-span-3"
+              type="url"
+              defaultValue="youroriginalurl.com"
               onChange={(e) => setUrl(e.target.value)}
             />
           </div>
@@ -72,6 +74,7 @@ export function AddNewUrl() {
             <Input
               id="code"
               className="col-span-3"
+              defaultValue="Slug for your url"
               onChange={(e) => setCode(e.target.value)}
             />
           </div>

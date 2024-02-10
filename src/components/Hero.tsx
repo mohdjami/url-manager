@@ -5,6 +5,17 @@ import { Button } from "@/components/ui/button";
 import { JSX, SVGProps, use, useState } from "react";
 import { Card, CardContent, CardDescription, CardTitle } from "./ui/card";
 import { useToast } from "./ui/use-toast";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+const FormSchema = z.object({
+  url: z
+    .string()
+    .min(1, "URL is required")
+    .url("Invalid URL")
+    .startsWith("http://", "URL must start with http://")
+    .startsWith("https://", "URL must start with https://"),
+});
+
 export default function Hero() {
   const [url, setUrl] = useState<string>("");
   const [loading, setLoading] = useState(false);
@@ -15,24 +26,35 @@ export default function Hero() {
   let [code, setCode] = useState("");
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
-    event.preventDefault();
+    try {
+      event.preventDefault();
+      const parsedUrl = FormSchema.parse({ url });
 
-    const res = await fetch("api/urls/create-url", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ url, code }),
-    });
-    const data = await res.json();
-    setCode(data.code);
-    setDisplayCode(data.code);
-    if (!res.ok) {
-      toast({ title: data.error, variant: "destructive" });
-    } else {
-      setSucces(true);
-      toast({ title: "Shortened URL has been created", variant: "default" });
-      setCode("");
+      const res = await fetch("api/urls/create-url", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ parsedUrl, code }),
+      });
+      const data = await res.json();
+      setCode(data.code);
+      setDisplayCode(data.code);
+      if (!res.ok) {
+        toast({ title: data.error, variant: "destructive" });
+      } else {
+        setSucces(true);
+        toast({ title: "Shortened URL has been created", variant: "default" });
+        setCode("");
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast({
+          title: error.errors[0].message,
+          description: "Urls must start with http:// or https://",
+          variant: "destructive",
+        });
+      }
     }
   };
 
@@ -105,7 +127,7 @@ export default function Hero() {
       </main>
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          © 2024 Acme Inc. All rights reserved.
+          All rights reserved.
         </p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link className="text-xs hover:underline underline-offset-4" href="#">

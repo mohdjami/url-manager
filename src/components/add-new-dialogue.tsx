@@ -43,7 +43,9 @@ export function AddNewUrl() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="sm">Add New Link</Button>
+        <Button size="sm" className="bg-slate-800">
+          Add New Link
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

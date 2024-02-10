@@ -7,8 +7,8 @@ export default withAuth(
     const token = await getToken({ req });
     const isAuth = !!token;
     const isAuthPage =
-      req.nextUrl.pathname.startsWith("/signin") ||
-      req.nextUrl.pathname.startsWith("/signup");
+      req.nextUrl.pathname.startsWith("/sign-in") ||
+      req.nextUrl.pathname.startsWith("/sign-up");
 
     if (isAuthPage) {
       if (isAuth) {

@@ -14,11 +14,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import GoogleSignInButton from "../GoogleSignInButton";
+import GoogleSignInButton from "../buttons/GoogleSignInButton";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
-import GithubSignInButton from "../GithubSignInButton";
+import GithubSignInButton from "../buttons/GithubSignInButton";
 import { useState } from "react";
 import { Icons } from "../Icons";
 

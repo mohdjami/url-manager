@@ -13,12 +13,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import GoogleSignInButton from "../GoogleSignInButton";
+import GoogleSignInButton from "../buttons/GoogleSignInButton";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
-import GithubSignInButton from "../GithubSignInButton";
+import GithubSignInButton from "../buttons/GithubSignInButton";
 
 const FormSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email"),

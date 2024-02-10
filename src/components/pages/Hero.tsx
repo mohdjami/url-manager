@@ -9,8 +9,8 @@ import {
   CardDescription,
   CardFooter,
   CardTitle,
-} from "./ui/card";
-import { useToast } from "./ui/use-toast";
+} from "../ui/card";
+import { useToast } from "../ui/use-toast";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 const FormSchema = z.object({

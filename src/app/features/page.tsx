@@ -1,4 +1,4 @@
-import Features from "@/components/Features";
+import Features from "@/components/pages/Features";
 import React from "react";
 
 const page = () => {

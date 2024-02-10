@@ -1,5 +1,5 @@
 import { CSSProperties, FC, JSX, ReactNode, SVGProps, useState } from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { signIn } from "next-auth/react";
 type ButtonProps = {
   children: React.ReactNode;

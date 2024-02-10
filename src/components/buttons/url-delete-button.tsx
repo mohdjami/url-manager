@@ -5,7 +5,7 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/Icons";
-import { DeleteDialog } from "./dialogs/delete-dialog";
+import { DeleteDialog } from "../dialogs/delete-dialog";
 import { Trash } from "lucide-react";
 
 interface DeleteButtonProps {

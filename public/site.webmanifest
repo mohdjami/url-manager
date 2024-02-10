@@ -1,0 +1,21 @@
+{
+  "name": "URL Shotener",
+  "short_name": "URL Shotener",
+  "description": "Track daily habits and monitor your progress with little effort.",
+  "start_url": "https://mjkm.vercel.app",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "standalone"
+}

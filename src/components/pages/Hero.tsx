@@ -13,6 +13,7 @@ import {
 import { useToast } from "../ui/use-toast";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSession } from "next-auth/react";
 const FormSchema = z.object({
   url: z
     .string()
@@ -23,6 +24,7 @@ const FormSchema = z.object({
 });
 
 export default function Hero() {
+  const { data: session } = useSession();
   const [url, setUrl] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [success, setSucces] = useState(false);
@@ -34,6 +36,12 @@ export default function Hero() {
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     try {
       event.preventDefault();
+      if (!session) {
+        toast({
+          title: "Please sign in to create a shortened URL",
+          variant: "destructive",
+        });
+      }
       const parsedUrl = FormSchema.parse({ url });
 
       const res = await fetch("api/urls/create-url", {

@@ -41,6 +41,7 @@ export function AddNewUrl() {
         setUrl("");
         setCode("");
         setLoading(false);
+        window.location.reload();
       }
     } catch (error) {
       console.log(error);

@@ -32,9 +32,12 @@ export const authOptions: AuthOptions = {
             email: credentials?.email,
           },
         });
+
         if (!user) {
           return null;
         }
+        if (user.password === null) return null;
+
         if (user.password) {
           const isValid = await compare(credentials.password, user.password!);
           if (!isValid) {

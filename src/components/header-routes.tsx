@@ -1,10 +1,7 @@
 import Link from "next/link";
-import { Button, buttonVariants } from "./ui/button";
-import { HandMetal, Menu, MusicIcon } from "lucide-react";
+import { HandMetal, Menu } from "lucide-react";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
-import UserAccountNav from "./user/UserAccountNav";
-import { ModeToggle } from "./mode-toggle";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 const HeaderRoutes = async () => {
   const session = await getServerSession(authOptions);

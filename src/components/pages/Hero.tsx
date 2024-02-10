@@ -22,7 +22,7 @@ const FormSchema = z.object({
     .startsWith("https://", "URL must start with https://"),
 });
 
-export default function Hero() {
+export default function Hero(props) {
   const [url, setUrl] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [success, setSucces] = useState(false);
@@ -71,25 +71,25 @@ export default function Hero() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center space-y-4 text-center">
               <div className="space-y-2">
-                <Card className="py-5">
-                  <CardTitle className="py-3">
+                <div className="py-5">
+                  <div className="py-3">
                     <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
                       URL Shortener
                     </h1>
-                  </CardTitle>
-                  <CardDescription className="py-3">
+                  </div>
+                  <div className="py-3">
                     <div className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
                       The essential tool for sharing. Create custom short links,
                       measure traffic, and grow your audience.
                     </div>
-                  </CardDescription>
-                  <CardFooter>
+                  </div>
+                  <div>
                     <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
                       Enter your URL below to shorten it. Share it with the
                       world.
                     </p>
-                  </CardFooter>
-                </Card>
+                  </div>
+                </div>
               </div>
               <div className="space-y-2 min-w-[300px]">
                 <Card className="py-3 px-5">

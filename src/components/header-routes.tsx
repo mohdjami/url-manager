@@ -11,8 +11,8 @@ const HeaderRoutes = async () => {
 
   const loggedIn = [
     {
-      href: "/#overview",
-      label: "Overview",
+      href: "/#home",
+      label: "Home",
     },
     {
       href: "/dashboard",
@@ -23,23 +23,15 @@ const HeaderRoutes = async () => {
       href: "/#features",
       label: "Features",
     },
-    {
-      href: "/#testimonials",
-      label: "Testimonials",
-    },
   ];
   const loggedOut = [
     {
-      href: "/#overview",
-      label: "Overview",
+      href: "/#home",
+      label: "Home",
     },
     {
-      href: "/#features",
+      href: "/features",
       label: "Features",
-    },
-    {
-      href: "/#testimonials",
-      label: "Testimonials",
     },
   ];
   const user = session?.user;

@@ -7,6 +7,7 @@ import UserAccountNav from "./user/UserAccountNav";
 import { ModeToggle } from "./mode-toggle";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import HeaderRoutes from "./header-routes";
+import { Mode } from "./theme";
 
 const Navbar = async () => {
   const session = await getServerSession(authOptions);
@@ -15,7 +16,8 @@ const Navbar = async () => {
       <div className="relative px-4 sm:px-6 lg:px-8 flex h-12 items-center justify-between w-full mx-auto max-w-7xl">
         <HeaderRoutes />
         <div className="flex items-center justify-center">
-          <ModeToggle /> &nbsp; &nbsp;
+          <Mode />
+          &nbsp; &nbsp;
           {session?.user ? (
             <UserAccountNav />
           ) : (

@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useTheme } from "next-themes";
 import { SVGProps, use, useState } from "react";
-import { useToast } from "./ui/use-toast";
+import { useToast } from "../ui/use-toast";
 interface Props {
   id: string;
   og: string;
@@ -43,8 +43,8 @@ export function DialogDemo({ id, og, su }: Props) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">
-          <FileEditIcon className="w-4 h-4" />
+        <Button size="icon" variant="outline">
+          <FileEditIcon className="h-4 w-4" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

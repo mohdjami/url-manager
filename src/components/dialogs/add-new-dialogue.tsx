@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useTheme } from "next-themes";
 import { SVGProps, use, useState } from "react";
-import { useToast } from "./ui/use-toast";
+import { useToast } from "../ui/use-toast";
 
 export function AddNewUrl() {
   const [url, setUrl] = useState<string>("");
@@ -43,7 +43,7 @@ export function AddNewUrl() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="sm" className="bg-slate-800">
+        <Button size="sm" variant="default">
           Add New Link
         </Button>
       </DialogTrigger>

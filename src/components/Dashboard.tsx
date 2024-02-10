@@ -19,10 +19,15 @@ import {
 } from "@/components/ui/table";
 import { JSX, SVGProps, useEffect, useState } from "react";
 import { useToast } from "./ui/use-toast";
-import { DialogDemo } from "./edit-dialogue";
-import { AddNewUrl } from "./add-new-dialogue";
-
+import { DialogDemo } from "./dialogs/edit-dialogue";
+import { AddNewUrl } from "./dialogs/add-new-dialogue";
+import { DeleteButton } from "./url-delete-button";
+import { useSession } from "next-auth/react";
 export default function Dashboard() {
+  const { data: session } = useSession();
+  if (!session) {
+    window.location.href = "/sign-in";
+  }
   const [urls, setUrls] = useState([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
@@ -48,30 +53,9 @@ export default function Dashboard() {
     }
     searchUrls();
   }, [search]);
-  const handleDelete = async (id: string) => {
-    try {
-      const res = await fetch("api/urls/delete", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id: id }),
-      });
-      toast({
-        title: "Deleted Successfully",
-        variant: "default",
-      });
-      window.location.reload();
-    } catch (error) {
-      toast({
-        title: "An error occured",
-        variant: "destructive",
-      });
-    }
-  };
 
   return (
-    <div className="flex flex-col w-full py-10 min-h-screen">
+    <div className="flex flex-col w-full py-12 min-h-screen">
       <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10">
         <div className="flex flex-col gap-2">
           <h1 className="text-3xl font-bold">Links</h1>
@@ -127,14 +111,8 @@ export default function Dashboard() {
                         />
                         <span className="sr-only">Edit</span>
                       </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => handleDelete(url.id)}
-                      >
-                        <TrashIcon className="w-4 h-4" />
-                        <span className="sr-only">Delete</span>
-                      </Button>
+
+                      <DeleteButton id={url.id} />
                     </TableCell>
                   </TableRow>
                 );

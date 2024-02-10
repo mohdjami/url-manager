@@ -18,6 +18,17 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
+    const originalUrlExists = await db.url.findUnique({
+      where: {
+        originalUrl,
+      },
+    });
+    if (originalUrlExists) {
+      return NextResponse.json(
+        { message: "Url already exists" },
+        { status: 400 }
+      );
+    }
     const url = await db.url.findUnique({
       where: {
         id,

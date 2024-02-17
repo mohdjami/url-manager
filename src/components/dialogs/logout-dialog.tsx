@@ -16,15 +16,13 @@ import { Icons } from "../Icons";
 interface Logout {
   open: boolean;
   onClose: () => void;
-  onDelete: () => Promise<void>;
+  onLogout: () => Promise<void>;
   isLoading: boolean;
 }
 
-export function Logout({ open, onClose, onDelete, isLoading }: Logout) {
-  const router = useRouter();
-
+export function Logout({ open, onClose, onLogout, isLoading }: Logout) {
   const handleDelete = async () => {
-    await onDelete();
+    await onLogout();
     onClose();
     window.location.reload();
   };

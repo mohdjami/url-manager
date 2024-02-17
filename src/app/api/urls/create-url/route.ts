@@ -1,3 +1,4 @@
+import { use } from "react";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { redis } from "@/lib/redis";
@@ -51,12 +52,16 @@ export async function POST(req: Request) {
     const urlExists = await db.url.findUnique({
       where: {
         originalUrl: parsedUrl,
+        userId: session.user.id,
+      },
+      select: {
+        userId: true,
       },
     });
     if (urlExists) {
       return NextResponse.json(
         {
-          error: "This URL is already shortened",
+          error: "This URL is already shortened please check your Dashboard",
         },
         {
           status: 409,

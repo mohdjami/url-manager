@@ -14,12 +14,11 @@ import { Label } from "@/components/ui/label";
 import { useTheme } from "next-themes";
 import { SVGProps, use, useState } from "react";
 import { useToast } from "../ui/use-toast";
+import { Eraser } from "lucide-react";
 interface Props {
   id: string;
-  og: string;
-  su: string;
 }
-export function DialogDemo({ id, og, su }: Props) {
+export function DialogDemo({ id }: Props) {
   const [originalUrl, setOriginalUrl] = useState<string>("");
   const [shortUrl, setShortUrl] = useState<string>("");
   const { toast } = useToast();
@@ -32,12 +31,28 @@ export function DialogDemo({ id, og, su }: Props) {
         },
         body: JSON.stringify({ id, originalUrl, shortUrl }),
       });
-      window.location.reload();
+      const data = await res.json();
+      if (res.status === 400) {
+        toast({
+          title: data.message,
+          variant: "default",
+        });
+      }
+      if (res.status === 200) {
+        toast({
+          title: "Updated Url",
+          variant: "default",
+        });
+        window.location.reload();
+      }
     } catch (error) {
-      toast({
-        title: "An error occured",
-        variant: "destructive",
-      });
+      console.log(error);
+      if (error instanceof Error) {
+        toast({
+          title: error.message,
+          variant: "destructive",
+        });
+      }
     }
   };
   return (

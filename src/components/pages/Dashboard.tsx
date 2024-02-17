@@ -100,11 +100,7 @@ export default function Dashboard() {
                     <TableCell>{`${url.clicks}`}</TableCell>
                     <TableCell className="flex justify-end gap-2">
                       <Button size="icon" variant="ghost">
-                        <DialogDemo
-                          id={url.id}
-                          og={url.originalUrl}
-                          su={url.shortUrl}
-                        />
+                        <DialogDemo id={url.id} />
                         <span className="sr-only">Edit</span>
                       </Button>
 

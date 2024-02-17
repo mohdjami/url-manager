@@ -8,37 +8,37 @@ import React from "react";
 import { Logout } from "../dialogs/logout-dialog";
 
 const UserAccountNav = () => {
-  const [showDeleteAlert, setShowDeleteAlert] = React.useState<boolean>(false);
-  const [isDeleteLoading, setIsDeleteLoading] = React.useState<boolean>(false);
+  const [showLogoutAlert, setShowLogoutAlert] = React.useState<boolean>(false);
+  const [isLogoutLoading, setIsLogoutLoading] = React.useState<boolean>(false);
 
-  const handleDelete = async () => {
-    setIsDeleteLoading(true);
+  const handleLogout = async () => {
+    setIsLogoutLoading(true);
     const logout = await signOut({
       redirect: true,
       callbackUrl: `${window.location.origin}/sign-in`,
     });
 
     if (logout) {
-      setIsDeleteLoading(false);
-      setShowDeleteAlert(false);
+      setIsLogoutLoading(false);
+      setShowLogoutAlert(false);
     }
   };
   return (
     <>
       {" "}
       <Button
-        onClick={() => setShowDeleteAlert(true)}
-        disabled={isDeleteLoading}
+        onClick={() => setShowLogoutAlert(true)}
+        disabled={isLogoutLoading}
         variant="destructive"
         className="dark:text-white"
       >
         Sign Out
       </Button>
       <Logout
-        open={showDeleteAlert}
-        onClose={() => setShowDeleteAlert(false)}
-        onDelete={handleDelete}
-        isLoading={isDeleteLoading}
+        open={showLogoutAlert}
+        onClose={() => setShowLogoutAlert(false)}
+        onLogout={handleLogout}
+        isLoading={isLogoutLoading}
       />
     </>
   );

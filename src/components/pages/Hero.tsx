@@ -40,12 +40,10 @@ export default function Hero() {
       } else {
         setSucces(true);
         toast({ title: "Shortened URL has been created", variant: "default" });
-        setUrl("");
         setCode("");
         setLoading(false);
       }
     } catch (error) {
-      console.log(error);
       setLoading(false);
       if (!session) {
         toast({
@@ -53,7 +51,6 @@ export default function Hero() {
           variant: "destructive",
         });
       } else if (error instanceof z.ZodError) {
-        console.log(error.errors[0].message);
         toast({
           title: error.errors[0].message,
           description: "Urls must start with http:// or https://",
@@ -104,7 +101,6 @@ export default function Hero() {
                           placeholder="Custom"
                           type="name"
                           onChange={(e) => {
-                            console.log(e.target.value);
                             setCode(e.target.value);
                           }}
                         />

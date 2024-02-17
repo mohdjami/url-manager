@@ -31,9 +31,10 @@ export async function POST(req: Request) {
         }
       );
     }
-    if (!code) {
+    while (!code) {
       code = await createShortUrl();
     }
+
     const codeExists = await db.url.findFirst({
       where: {
         shortUrl: code,

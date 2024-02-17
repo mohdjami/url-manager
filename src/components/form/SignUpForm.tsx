@@ -20,7 +20,7 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import GithubSignInButton from "../buttons/GithubSignInButton";
 import { useState } from "react";
-import { Icons } from "../icons";
+import { Icons } from "../Icons";
 
 const FormSchema = z
   .object({

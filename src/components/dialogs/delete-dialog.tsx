@@ -11,7 +11,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Icons } from "../icons";
+import { Icons } from "../Icons";
 
 interface DeleteDialog {
   open: boolean;

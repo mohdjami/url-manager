@@ -17,7 +17,7 @@ import { useToast } from "../ui/use-toast";
 import { fetchUrl } from "@/lib/fetchUrl";
 import { useSession } from "next-auth/react";
 import { z } from "zod";
-import { Icons } from "../icons";
+import { Icons } from "../Icons";
 
 export function AddNewUrl() {
   const [url, setUrl] = useState<string>("");

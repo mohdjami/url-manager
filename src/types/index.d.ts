@@ -7,7 +7,7 @@ export interface URL {
   createdAt: Date;
   updatedAt: Date;
 }
-import { IconKeys } from "@/components/icons";
+import { IconKeys } from "@/components/Icons";
 
 export type SiteConfig = {
   name: string;

@@ -15,7 +15,7 @@ import { useSession } from "next-auth/react";
 import createShortUrl from "@/lib/urls";
 import { fetchUrl } from "@/lib/fetchUrl";
 import { z } from "zod";
-import { Icons } from "../icons";
+import { Icons } from "../Icons";
 
 export default function Hero() {
   const { data: session } = useSession();

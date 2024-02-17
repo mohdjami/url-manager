@@ -4,7 +4,7 @@ import React from "react";
 const Features = () => {
   return (
     <section className="w-full py-12 md:py-24 lg:py-32 border-t" id="features">
-      <div className=" grid items-center gap-10 sm:px-10 md:gap-16 md:grid-cols-2">
+      <div className="container grid items-center gap-10 sm:px-10 md:gap-16 md:grid-cols-2">
         <div className="space-y-4">
           <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm dark:bg-gray-800">
             Performance

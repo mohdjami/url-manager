@@ -1,9 +1,6 @@
 "use client";
 import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/use-toast";
-import { Icons } from "@/components/Icons";
-import { Trash } from "lucide-react";
 import React from "react";
 import { Logout } from "../dialogs/logout-dialog";
 

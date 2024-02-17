@@ -1,6 +1,6 @@
 "use client";
 import { useTheme } from "next-themes";
-import { Icons } from "./Icons";
+import { Icons } from "./icons";
 import { Button } from "./ui/button";
 import { useState } from "react";
 

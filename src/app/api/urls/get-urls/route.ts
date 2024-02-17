@@ -1,23 +1,20 @@
-import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { redis } from "@/lib/redis";
-import { getServerSession } from "next-auth";
+import { getCurrentUser } from "@/lib/session";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session)
+    const user = await getCurrentUser();
+    if (!user)
       return NextResponse.json({
         error: "You must be logged in to do that",
       });
 
     const urls = await db.url.findMany({
       where: {
-        userId: session?.user.id,
+        userId: user?.id,
       },
     });
-
     return NextResponse.json({
       urls,
     });

@@ -1,13 +1,12 @@
 import Link from "next/link";
-import { Button, buttonVariants } from "./ui/button";
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
 import UserAccountNav from "./user/UserAccountNav";
 import HeaderRoutes from "./header-routes";
 import { Mode } from "./theme";
+import { getCurrentUser } from "@/lib/session";
+import { buttonVariants } from "./ui/button";
 
 const Navbar = async () => {
-  const session = await getServerSession(authOptions);
+  const user = await getCurrentUser();
   return (
     <header className="sm:flex sm:justify-between   px-4  bg-slate-900 dark:bg-zinc-100 py-2 border-b border-s-zinc-200 fixed w-full z-10 top-0">
       <div className="relative px-4 sm:px-6 lg:px-8 flex h-12 items-center justify-between w-full mx-auto max-w-7xl">
@@ -15,7 +14,7 @@ const Navbar = async () => {
         <div className="flex items-center justify-center">
           <Mode />
           &nbsp; &nbsp;
-          {session?.user ? (
+          {user ? (
             <UserAccountNav />
           ) : (
             <Link

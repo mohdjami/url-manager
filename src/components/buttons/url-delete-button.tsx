@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
-import { Icons } from "@/components/Icons";
+import { Icons } from "@/components/icons";
 import { DeleteDialog } from "../dialogs/delete-dialog";
 import { Trash } from "lucide-react";
 

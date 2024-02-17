@@ -1,12 +1,11 @@
-import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { getServerSession } from "next-auth";
+import { getCurrentUser } from "@/lib/session";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session)
+    const user = await getCurrentUser();
+    if (!user)
       return NextResponse.json({
         error: "You must be logged in to do that",
       });
@@ -30,7 +29,7 @@ export async function POST(req: Request) {
     }
     const originalUrlExists = await db.url.findUnique({
       where: {
-        userId: session?.user.id,
+        userId: user.id,
         id,
       },
       select: { userId: true, shortUrl: true, originalUrl: true },
@@ -45,6 +44,7 @@ export async function POST(req: Request) {
     await db.url.updateMany({
       where: {
         id,
+        userId: user.id,
       },
       data: {
         originalUrl: originalUrl || originalUrlExists?.originalUrl,

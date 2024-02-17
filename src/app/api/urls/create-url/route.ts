@@ -1,17 +1,14 @@
-import { use } from "react";
-import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { redis } from "@/lib/redis";
 import createShortUrl from "@/lib/urls";
-import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
+import { getCurrentUser } from "@/lib/session";
 
 export async function POST(req: Request) {
   try {
-    const session = await getServerSession(authOptions);
+    const user = await getCurrentUser();
 
     let { parsedUrl, code } = await req.json();
-    if (!session?.user.id) {
+    if (!user) {
       return NextResponse.json(
         {
           error: "Unauthorized",
@@ -53,7 +50,7 @@ export async function POST(req: Request) {
     const urlExists = await db.url.findUnique({
       where: {
         originalUrl: parsedUrl,
-        userId: session.user.id,
+        userId: user.id,
       },
       select: {
         userId: true,
@@ -73,7 +70,7 @@ export async function POST(req: Request) {
       data: {
         originalUrl: parsedUrl,
         shortUrl: code,
-        userId: session.user.id,
+        userId: user.id,
       },
     });
     return NextResponse.json({

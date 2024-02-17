@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { HandMetal, Menu } from "lucide-react";
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import { getCurrentUser } from "@/lib/session";
 const HeaderRoutes = async () => {
-  const session = await getServerSession(authOptions);
+  const user = await getCurrentUser();
 
   const loggedIn = [
     {
@@ -31,7 +30,6 @@ const HeaderRoutes = async () => {
       label: "Features",
     },
   ];
-  const user = session?.user;
 
   const routes = user ? loggedIn : loggedOut;
   return (

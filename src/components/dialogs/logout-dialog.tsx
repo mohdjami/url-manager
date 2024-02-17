@@ -11,7 +11,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Icons } from "../Icons";
+import { Icons } from "../icons";
 
 interface Logout {
   open: boolean;

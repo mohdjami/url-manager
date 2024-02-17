@@ -1,14 +1,11 @@
-import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { Slice } from "lucide-react";
-import next from "next";
-import { getServerSession } from "next-auth";
+import { getCurrentUser } from "@/lib/session";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const session = await getServerSession(authOptions);
+  const user = await getCurrentUser();
   try {
-    if (!session?.user.id) {
+    if (!user?.id) {
       return NextResponse.json("Unauthorized", { status: 401 });
     }
     const { slug } = await req.json();

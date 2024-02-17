@@ -1,9 +1,11 @@
 import { db } from "@/lib/db";
 import { redis } from "@/lib/redis";
+import { updateClicks } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   try {
+    console.log("route called");
     const slug = req.url.split("/").pop();
     const cachedUrl = await redis.get(slug!);
     if (!slug) {
@@ -17,6 +19,8 @@ export async function GET(req: NextRequest) {
       );
     }
     if (cachedUrl) {
+      await updateClicks(slug);
+
       return NextResponse.redirect(cachedUrl || "/", {
         headers: {
           "Cache-Control": "public, max-age=31536000, immutable",
@@ -45,20 +49,8 @@ export async function GET(req: NextRequest) {
         }
       );
     }
-    const clicks = await db.url.update({
-      where: {
-        shortUrl: slug,
-      },
-      data: {
-        clicks: {
-          increment: 1,
-        },
-      },
-      select: {
-        clicks: true,
-      },
-    });
-    const updatedCache = await redis.set(slug, url?.originalUrl);
+    await updateClicks(slug);
+    await redis.set(slug, url?.originalUrl);
     return NextResponse.redirect(url?.originalUrl || "/", {
       headers: {
         "Cache-Control": "public, max-age=31536000, immutable",

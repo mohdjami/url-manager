@@ -4,7 +4,7 @@ export const siteConfig: SiteConfig = {
   name: "Url-shortener",
   author: "mohdjami",
   description:
-    "Shorten your long urls with fast  and reliable url shortening service.",
+    "Shorten your long urls with fast and reliable url shortening service.",
   keywords: [
     "Next.js",
     "React",

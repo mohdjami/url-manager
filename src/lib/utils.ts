@@ -11,7 +11,7 @@ export const handleError = (message: string) => {
   return NextResponse.json({ error: message });
 };
 
-export const updateClicks = async (slug: string) => {
+export const updateClicks = async (slug: string, urlId: string) => {
   const clicks = await db.url.update({
     where: {
       shortUrl: slug,
@@ -25,5 +25,11 @@ export const updateClicks = async (slug: string) => {
       clicks: true,
     },
   });
+  await db.urlClick.create({
+    data: {
+      urlId,
+    },
+  });
+
   return clicks;
 };

@@ -18,16 +18,6 @@ export async function GET(req: NextRequest) {
         }
       );
     }
-    if (cachedUrl) {
-      await updateClicks(slug);
-
-      return NextResponse.redirect(cachedUrl || "/", {
-        headers: {
-          "Cache-Control": "public, max-age=31536000, immutable",
-        },
-      });
-    }
-
     const url = await db.url.findUnique({
       where: {
         shortUrl: slug,
@@ -36,8 +26,19 @@ export async function GET(req: NextRequest) {
         originalUrl: true,
         clicks: true,
         shortUrl: true,
+        id: true,
       },
     });
+
+    if (cachedUrl) {
+      await updateClicks(slug, url?.id!);
+
+      return NextResponse.redirect(cachedUrl || "/", {
+        headers: {
+          "Cache-Control": "public, max-age=31536000, immutable",
+        },
+      });
+    }
 
     if (!url) {
       return NextResponse.json(
@@ -49,7 +50,7 @@ export async function GET(req: NextRequest) {
         }
       );
     }
-    await updateClicks(slug);
+    await updateClicks(slug, url?.id);
     await redis.set(slug, url?.originalUrl);
     return NextResponse.redirect(url?.originalUrl || "/", {
       headers: {

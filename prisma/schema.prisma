@@ -69,4 +69,15 @@ model Url {
   clicks      Int @default(0) 
   updatedAt   DateTime @updatedAt
   userId      String
+ }
+
+model UrlClick {
+  id        String   @id @default(cuid())
+  urlId     String
+  createdAt DateTime @default(now())
+  ipAddress String?
+  userAgent String?
+  referer   String?
 }
+
+ 

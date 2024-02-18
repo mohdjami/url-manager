@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
 import { NextResponse } from "next/server";
+import { redis } from "@/lib/redis";
 
 export async function POST(req: Request) {
   try {
@@ -40,7 +41,7 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-
+    await redis.set(shortUrl, originalUrl);
     await db.url.updateMany({
       where: {
         id,
@@ -49,6 +50,7 @@ export async function POST(req: Request) {
       data: {
         originalUrl: originalUrl || originalUrlExists?.originalUrl,
         shortUrl: shortUrl || originalUrlExists?.shortUrl,
+        updatedAt: new Date(Date.now()),
       },
     });
     return NextResponse.json(

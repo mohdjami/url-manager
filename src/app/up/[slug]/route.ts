@@ -8,6 +8,7 @@ export async function GET(req: NextRequest) {
     console.log("route called");
     const slug = req.url.split("/").pop();
     const cachedUrl = await redis.get(slug!);
+    console.log(slug);
     if (!slug) {
       return NextResponse.json(
         {
@@ -29,6 +30,16 @@ export async function GET(req: NextRequest) {
         id: true,
       },
     });
+    if (!url) {
+      return NextResponse.json(
+        {
+          error: "No url found",
+        },
+        {
+          status: 404,
+        }
+      );
+    }
 
     if (cachedUrl) {
       await updateClicks(slug, url?.id!);
@@ -40,16 +51,6 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    if (!url) {
-      return NextResponse.json(
-        {
-          error: "No url found",
-        },
-        {
-          status: 404,
-        }
-      );
-    }
     await updateClicks(slug, url?.id);
     await redis.set(slug, url?.originalUrl);
     return NextResponse.redirect(url?.originalUrl || "/", {
@@ -58,7 +59,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.log(error);
+    console.log("error", error);
     return NextResponse.json(
       {
         error: "An error occurred",

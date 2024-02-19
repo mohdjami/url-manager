@@ -11,7 +11,7 @@ export const handleError = (message: string) => {
   return NextResponse.json({ error: message });
 };
 
-export const updateClicks = async (slug: string, urlId: string) => {
+export const updateClicks = async (slug: string) => {
   const clicks = await db.url.update({
     where: {
       shortUrl: slug,
@@ -25,9 +25,20 @@ export const updateClicks = async (slug: string, urlId: string) => {
       clicks: true,
     },
   });
+  const url = await db.url.findUnique({
+    where: {
+      shortUrl: slug,
+    },
+    select: {
+      id: true,
+    },
+  });
+  if (!url) {
+    return;
+  }
   await db.urlClick.create({
     data: {
-      urlId,
+      urlId: url?.id as string,
     },
   });
 

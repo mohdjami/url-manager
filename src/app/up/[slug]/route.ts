@@ -19,6 +19,15 @@ export async function GET(req: NextRequest) {
         }
       );
     }
+
+    if (cachedUrl) {
+      await updateClicks(slug);
+      return NextResponse.redirect(cachedUrl || "/", {
+        headers: {
+          "Cache-Control": "public, max-age=31536000, immutable",
+        },
+      });
+    }
     const url = await db.url.findUnique({
       where: {
         shortUrl: slug,
@@ -41,17 +50,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    if (cachedUrl) {
-      await updateClicks(slug, url?.id!);
-
-      return NextResponse.redirect(cachedUrl || "/", {
-        headers: {
-          "Cache-Control": "public, max-age=31536000, immutable",
-        },
-      });
-    }
-
-    await updateClicks(slug, url?.id);
+    await updateClicks(slug);
     await redis.set(slug, url?.originalUrl);
     return NextResponse.redirect(url?.originalUrl || "/", {
       headers: {
@@ -59,7 +58,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.log("error", error);
+    console.log({ error }.error);
     return NextResponse.json(
       {
         error: "An error occurred",

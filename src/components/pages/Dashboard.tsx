@@ -9,6 +9,8 @@ import {
   DropdownMenuContent,
   DropdownMenu,
 } from "@/components/ui/dropdown-menu";
+import Skeleton from "react-loading-skeleton";
+
 import {
   TableHead,
   TableRow,
@@ -17,11 +19,12 @@ import {
   TableBody,
   Table,
 } from "@/components/ui/table";
-import { JSX, SVGProps, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "../ui/use-toast";
 import { DialogDemo } from "../dialogs/edit-dialogue";
 import { AddNewUrl } from "../dialogs/add-new-dialogue";
 import { DeleteButton } from "../buttons/url-delete-button";
+import { Icons } from "../Icons";
 export default function Dashboard() {
   const [urls, setUrls] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -81,8 +84,14 @@ export default function Dashboard() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {urls.map((url: any) => {
-                return (
+              {loading ? (
+                <TableRow className="divide-y rounded-lg">
+                  <TableCell className="font-semibold items-center">
+                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                  </TableCell>
+                </TableRow>
+              ) : urls.length > 0 ? (
+                urls.map((url: any) => (
                   <TableRow className="divide-y rounded-lg" key={url.id}>
                     <TableCell className="font-semibold" typeof="url">
                       <Link
@@ -106,8 +115,12 @@ export default function Dashboard() {
                       <DeleteButton id={url.id} />
                     </TableCell>
                   </TableRow>
-                );
-              })}
+                ))
+              ) : (
+                <TableCell className="font-semibold">
+                  Start Creating URLs
+                </TableCell>
+              )}
             </TableBody>
           </Table>
         </div>

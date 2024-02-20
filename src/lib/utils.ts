@@ -44,3 +44,28 @@ export const updateClicks = async (slug: string) => {
 
   return clicks;
 };
+
+export const findSlug = async (slug: string) => {
+  const url = await db.url.findUnique({
+    where: {
+      shortUrl: slug,
+    },
+  });
+  return url;
+};
+
+export const urlExists = async (parsedUrl: string, userId: string) => {
+  try {
+    const url = await db.url.findUnique({
+      where: {
+        originalUrl: parsedUrl,
+        userId: userId,
+      },
+    });
+    return url;
+  } catch (error) {
+    return new Response(null, {
+      status: 500,
+    });
+  }
+};

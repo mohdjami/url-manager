@@ -21,28 +21,14 @@ import { useToast } from "@/components/ui/use-toast";
 import GithubSignInButton from "../buttons/GithubSignInButton";
 import { useState } from "react";
 import { Icons } from "../Icons";
-
-const FormSchema = z
-  .object({
-    username: z.string().min(1, "Username is required").max(100),
-    email: z.string().min(1, "Email is required").email("Invalid email"),
-    password: z
-      .string()
-      .min(1, "Password is required")
-      .min(8, "Password must have than 8 characters"),
-    confirmPassword: z.string().min(1, "Password confirmation is required"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    path: ["confirmPassword"],
-    message: "Password do not match",
-  });
+import { SignUpFormFormSchema } from "@/lib/validations/forms";
 
 const SignUpForm = () => {
   const router = useRouter();
   const { toast } = useToast();
   const [loading, isLoading] = useState(false);
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof SignUpFormFormSchema>>({
+    resolver: zodResolver(SignUpFormFormSchema),
     defaultValues: {
       username: "",
       email: "",
@@ -50,7 +36,7 @@ const SignUpForm = () => {
       confirmPassword: "",
     },
   });
-  const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+  const onSubmit = async (values: z.infer<typeof SignUpFormFormSchema>) => {
     try {
       isLoading(true);
       const response = await axios.post("/api/auth/user", values);

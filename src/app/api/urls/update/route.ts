@@ -2,6 +2,8 @@ import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
 import { NextResponse } from "next/server";
 import { redis } from "@/lib/redis";
+import { slugSchema } from "@/lib/validations/urls";
+import { z } from "zod";
 
 export async function POST(req: Request) {
   try {
@@ -11,7 +13,9 @@ export async function POST(req: Request) {
         error: "You must be logged in to do that",
       });
     const { id, originalUrl, shortUrl } = await req.json();
-    if (!originalUrl || !shortUrl) {
+    const parsedCode = slugSchema.parse({ slug: shortUrl });
+
+    if (!originalUrl || !parsedCode) {
       return NextResponse.json(
         { message: "Missing parameter" },
         { status: 400 }
@@ -19,7 +23,7 @@ export async function POST(req: Request) {
     }
     const slug = await db.url.findUnique({
       where: {
-        shortUrl,
+        shortUrl: parsedCode.slug,
       },
     });
     if (slug) {
@@ -42,7 +46,7 @@ export async function POST(req: Request) {
       );
     }
     await redis.del(originalUrlExists?.shortUrl!);
-    await redis.set(shortUrl, originalUrl);
+    await redis.set(parsedCode.slug, originalUrl);
     await db.url.updateMany({
       where: {
         id,
@@ -50,7 +54,7 @@ export async function POST(req: Request) {
       },
       data: {
         originalUrl: originalUrl || originalUrlExists?.originalUrl,
-        shortUrl: shortUrl || originalUrlExists?.shortUrl,
+        shortUrl: parsedCode.slug || originalUrlExists?.shortUrl,
         updatedAt: new Date(Date.now()),
       },
     });
@@ -63,14 +67,17 @@ export async function POST(req: Request) {
       }
     );
   } catch (error) {
-    console.log(error);
-    return NextResponse.json(
-      {
-        error: "An error occured",
-      },
-      {
-        status: 500,
-      }
-    );
+    if (error instanceof z.ZodError) {
+      console.log("errors is:", error.errors);
+
+      return NextResponse.json(
+        {
+          error: error.errors,
+        },
+        {
+          status: 500,
+        }
+      );
+    }
   }
 }

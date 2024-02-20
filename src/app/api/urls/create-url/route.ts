@@ -2,12 +2,17 @@ import { db } from "@/lib/db";
 import createShortUrl from "@/lib/urls";
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/session";
+import { redis } from "@/lib/redis";
+import { findSlug, urlExists } from "@/lib/utils";
+import { slugSchema } from "@/lib/validations/urls";
+import { z } from "zod";
 
 export async function POST(req: Request) {
   try {
     const user = await getCurrentUser();
 
     let { parsedUrl, code } = await req.json();
+
     if (!user) {
       return NextResponse.json(
         {
@@ -31,32 +36,13 @@ export async function POST(req: Request) {
     while (!code) {
       code = await createShortUrl();
     }
-
-    const codeExists = await db.url.findFirst({
-      where: {
-        shortUrl: code,
-      },
-    });
-    if (codeExists) {
-      return NextResponse.json(
-        {
-          error: "This slug is already in use. Please choose another one.",
-        },
-        {
-          status: 409,
-        }
-      );
-    }
-    const urlExists = await db.url.findUnique({
-      where: {
-        originalUrl: parsedUrl,
-        userId: user.id,
-      },
-      select: {
-        userId: true,
-      },
-    });
-    if (urlExists) {
+    const parsedCode = slugSchema.parse({ slug: code });
+    await redis.set(parsedCode.slug, parsedUrl, "EX", 60 * 60 * 24 * 7); // expire in one week
+    if (await findSlug(parsedCode.slug))
+      return new Response(null, {
+        status: 409,
+      });
+    if (await urlExists(parsedUrl, user.id)) {
       return NextResponse.json(
         {
           error: "This URL is already shortened please check your Dashboard",
@@ -69,7 +55,7 @@ export async function POST(req: Request) {
     const Url = await db.url.create({
       data: {
         originalUrl: parsedUrl,
-        shortUrl: code,
+        shortUrl: parsedCode.slug,
         userId: user.id,
       },
     });
@@ -78,14 +64,16 @@ export async function POST(req: Request) {
       code,
     });
   } catch (error) {
-    console.log(error);
-    return NextResponse.json(
-      {
-        error: "An error occured",
-      },
-      {
-        status: 500,
-      }
-    );
+    if (error instanceof z.ZodError) {
+      console.log("errors is:", error.errors[0].message!);
+      return NextResponse.json(
+        {
+          error: error.errors[0].message!,
+        },
+        {
+          status: 500,
+        }
+      );
+    }
   }
 }

@@ -21,22 +21,15 @@ import axios from "axios";
 import GithubSignInButton from "../buttons/GithubSignInButton";
 import { useState } from "react";
 import { Icons } from "../Icons";
-
-const FormSchema = z.object({
-  email: z.string().min(1, "Email is required").email("Invalid email"),
-  password: z
-    .string()
-    .min(1, "Password is required")
-    .min(8, "Password must have than 8 characters"),
-});
+import { SignInFormFormSchema } from "@/lib/validations/forms";
 
 const SignInForm = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
 
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof SignInFormFormSchema>>({
+    resolver: zodResolver(SignInFormFormSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -59,7 +52,7 @@ const SignInForm = () => {
     });
   };
 
-  const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+  const onSubmit = async (values: z.infer<typeof SignInFormFormSchema>) => {
     try {
       setLoading(true);
       const result = await signIn("credentials", {

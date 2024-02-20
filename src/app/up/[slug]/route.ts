@@ -5,10 +5,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   try {
-    console.log("route called");
     const slug = req.url.split("/").pop();
     const cachedUrl = await redis.get(slug!);
-    console.log(slug);
+    // console.log(slug)s;
     if (!slug) {
       return NextResponse.json(
         {

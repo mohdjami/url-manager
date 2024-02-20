@@ -41,6 +41,7 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
+    await redis.del(originalUrlExists?.shortUrl!);
     await redis.set(shortUrl, originalUrl);
     await db.url.updateMany({
       where: {

@@ -24,6 +24,11 @@ export async function DELETE(req: Request) {
         id: id,
       },
     });
+    await db.urlClick.deleteMany({
+      where: {
+        urlId: id,
+      },
+    });
     return NextResponse.json(
       {
         message: "Url deleted",

@@ -17,23 +17,11 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useToast } from "../ui/use-toast";
 import { Icons } from "../Icons";
+import { ResetPasswordFormSchema } from "@/lib/validations/forms";
 type FormValues = {
   password: string;
   confirmPassword: string;
 };
-
-const Schema = z
-  .object({
-    password: z
-      .string()
-      .min(1, "Password is required")
-      .min(8, "Password must have than 8 characters"),
-    confirmPassword: z.string().min(1, "Password confirmation is required"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    path: ["confirmPassword"],
-    message: "Password do not match",
-  });
 
 const ResetPassword = () => {
   const form = useForm<FormValues>();
@@ -71,7 +59,7 @@ const ResetPassword = () => {
       </div>
     );
   } else {
-    const onSubmit = async (data: z.infer<typeof Schema>) => {
+    const onSubmit = async (data: z.infer<typeof ResetPasswordFormSchema>) => {
       try {
         await axios.post("/api/auth/reset-password", {
           ...data,

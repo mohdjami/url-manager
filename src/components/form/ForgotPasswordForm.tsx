@@ -15,21 +15,19 @@ import { Button } from "../ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
+import { ForgotPasswordFormSchema } from "@/lib/validations/forms";
 
 type FormValues = {
   email: string;
 };
-const Schema = z.object({
-  email: z.string().min(1, "Email is required").email("Invalid email"),
-});
 
 const ForgotPassword = () => {
   // const [email, setEmail] = useState("");
   const form = useForm<FormValues>();
   const router = useRouter();
   const { toast } = useToast();
-  
-  const onSubmit = async (values: z.infer<typeof Schema>) => {
+
+  const onSubmit = async (values: z.infer<typeof ForgotPasswordFormSchema>) => {
     try {
       const response = await axios.post("/api/auth/forgot-password", values, {
         headers: {

@@ -10,7 +10,7 @@ const GoogleSignInButton: React.FC<ButtonProps> = ({ children }) => {
 
   return (
     <Button
-      disabled={isLoading}
+      disabled={true}
       onClick={async () => {
         setLoading(true);
         await signIn("google", { callbackUrl: "/dashboard" });

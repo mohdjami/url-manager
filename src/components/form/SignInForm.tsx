@@ -20,6 +20,7 @@ import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
 import GithubSignInButton from "../buttons/GithubSignInButton";
 import { useState } from "react";
+import { Icons } from "../Icons";
 
 const FormSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email"),
@@ -128,7 +129,11 @@ const SignInForm = () => {
           type="submit"
           variant="outline"
         >
-          Sign in
+          {loading ? (
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            "Sign in"
+          )}{" "}
         </Button>
       </form>
       <Link

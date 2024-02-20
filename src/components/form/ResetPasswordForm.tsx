@@ -16,6 +16,7 @@ import axios from "axios";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useToast } from "../ui/use-toast";
+import { Icons } from "../Icons";
 type FormValues = {
   password: string;
   confirmPassword: string;
@@ -57,7 +58,12 @@ const ResetPassword = () => {
     verify();
   }, [token, email]);
   if (isValid === null) {
-    return <div>Verifying token...</div>;
+    return (
+      <div className=" dark:text-slate-950">
+        <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+        Verifying token...
+      </div>
+    );
   } else if (!isValid) {
     return (
       <div>

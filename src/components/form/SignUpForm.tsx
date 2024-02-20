@@ -59,8 +59,8 @@ const SignUpForm = () => {
         isLoading(false);
 
         try {
-          const response = await axios.post("/api/send-mail", values);
           router.push("/sign-in");
+          await axios.post("/api/send-mail", values);
           toast({
             title:
               "A verification email has been sent to your email address. It may take some time to appear in your inbox.",
@@ -71,7 +71,7 @@ const SignUpForm = () => {
 
           toast({
             title: "Error, try again",
-            description: "̥ Something went wrong",
+            description: "Something went wrong",
             variant: "destructive",
           });
         }
@@ -162,26 +162,28 @@ const SignUpForm = () => {
           />
         </div>
 
-        <div style={{ marginBottom: "10px" }}>
-          <Button
-            className="flex items-center space-x-2 w-full md:block hidden  "
-            type="submit"
-            variant="outline"
-          >
-            {loading ? (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <p>Sign up</p>
-            )}
-          </Button>
-          <Button
-            className="w-full mt-4 md:mt-8 lg:mt-10 block lg:hidden"
-            type="submit"
-            variant="outline"
-          >
-            Sign up
-          </Button>
-        </div>
+        <Button
+          className="flex items-center w-full mt-6 md:block hidden  "
+          type="submit"
+          variant="outline"
+        >
+          {loading ? (
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            "Sign up"
+          )}{" "}
+        </Button>
+        <Button
+          className="items-center w-full mt-4 md:mt-8 lg:mt-10 block lg:hidden"
+          type="submit"
+          variant="outline"
+        >
+          {loading ? (
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            "Sign up"
+          )}{" "}
+        </Button>
       </form>
       <div className="mx-auto my-4 flex w-full items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-stone-400 after:ml-4 after:block after:h-px after:flex-grow after:bg-stone-400 dark:text-gray-600 ">
         or

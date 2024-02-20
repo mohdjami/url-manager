@@ -15,8 +15,9 @@ export function Mode() {
             setTheme("dark");
             setMode("dark");
           }}
+          variant="link"
         >
-          <Icons.moon className="w-6 h-6 text-white dark:hidden" />
+          <Icons.moon className="w-6 h-6 text-white" />
         </Button>
       ) : (
         <Button
@@ -24,6 +25,7 @@ export function Mode() {
             setTheme("light");
             setMode("light");
           }}
+          variant="link"
         >
           <Icons.sun className="w-6 h-6 text-black dark:text-black" />
         </Button>

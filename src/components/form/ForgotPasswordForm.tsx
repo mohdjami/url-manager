@@ -28,7 +28,7 @@ const ForgotPassword = () => {
   const form = useForm<FormValues>();
   const router = useRouter();
   const { toast } = useToast();
-
+  
   const onSubmit = async (values: z.infer<typeof Schema>) => {
     try {
       const response = await axios.post("/api/auth/forgot-password", values, {

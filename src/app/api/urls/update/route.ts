@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 import { redis } from "@/lib/redis";
 import { slugSchema } from "@/lib/validations/urls";
 import { z } from "zod";
+import { findSlug, urlExists } from "@/lib/utils";
+import { UrlExistsResult } from "@/types";
 
 export async function POST(req: Request) {
   try {
@@ -21,30 +23,24 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-    const slug = await db.url.findUnique({
-      where: {
-        shortUrl: parsedCode.slug,
-      },
-    });
-    if (slug) {
+
+    if (await findSlug(parsedCode.slug)) {
       return NextResponse.json(
         { message: "Slug already exists" },
         { status: 400 }
       );
     }
-    const originalUrlExists = await db.url.findUnique({
-      where: {
-        userId: user.id,
-        id,
-      },
-      select: { userId: true, shortUrl: true, originalUrl: true },
-    });
-    if (originalUrlExists?.originalUrl !== originalUrl) {
+    const originalUrlExists = (await urlExists(
+      originalUrl,
+      user.id
+    )) as UrlExistsResult;
+    if (originalUrlExists.originalUrl !== originalUrl) {
       return NextResponse.json(
         { message: "Url should be same." },
         { status: 400 }
       );
     }
+
     await redis.del(originalUrlExists?.shortUrl!);
     await redis.set(parsedCode.slug, originalUrl);
     await db.url.updateMany({

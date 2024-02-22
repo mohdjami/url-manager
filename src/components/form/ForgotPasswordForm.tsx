@@ -22,14 +22,13 @@ type FormValues = {
 };
 
 const ForgotPassword = () => {
-  // const [email, setEmail] = useState("");
   const form = useForm<FormValues>();
   const router = useRouter();
   const { toast } = useToast();
 
   const onSubmit = async (values: z.infer<typeof ForgotPasswordFormSchema>) => {
     try {
-      const response = await axios.post("/api/auth/forgot-password", values, {
+      await axios.post("/api/auth/forgot-password", values, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -53,7 +52,6 @@ const ForgotPassword = () => {
           description: "An error occurred. Please try again.",
           variant: "destructive",
         });
-        console.error(error);
       }
     }
   };

@@ -3,15 +3,6 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenuTrigger,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuContent,
-  DropdownMenu,
-} from "@/components/ui/dropdown-menu";
-import Skeleton from "react-loading-skeleton";
-
-import {
   TableHead,
   TableRow,
   TableHeader,
@@ -63,14 +54,14 @@ export default function Dashboard() {
           </p>
         </div>
         <div className="flex items-center gap-4 mt-8">
-          <form className="flex-1">
+          <div className="flex-1">
             <Input
               placeholder="Search links..."
               onChange={(e) => {
                 setSearch(e.target.value);
               }}
             />
-          </form>
+          </div>
           <AddNewUrl />
         </div>
         <div className="w-full overflow-auto">

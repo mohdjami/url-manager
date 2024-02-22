@@ -23,3 +23,13 @@ export type SiteConfig = {
   };
   ogImage: string;
 };
+
+export type UrlExistsResult = {
+  id: string;
+  originalUrl: string;
+  shortUrl: string;
+  createdAt: Date;
+  clicks: number;
+  updatedAt: Date;
+  userId: string;
+};

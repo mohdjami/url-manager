@@ -65,7 +65,6 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.log("errors is:", error.errors[0].message!);
       return NextResponse.json(
         {
           error: error.errors[0].message!,
@@ -75,5 +74,13 @@ export async function POST(req: Request) {
         }
       );
     }
+    return NextResponse.json(
+      {
+        error: "Something went very wrong",
+      },
+      {
+        status: 500,
+      }
+    );
   }
 }

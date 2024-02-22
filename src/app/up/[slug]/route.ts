@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
   try {
     const slug = req.url.split("/").pop();
     const cachedUrl = await redis.get(slug!);
-    // console.log(slug)s;
+    console.log("route called");
     if (!slug) {
       return NextResponse.json(
         {

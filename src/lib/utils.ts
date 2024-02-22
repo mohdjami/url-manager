@@ -61,6 +61,10 @@ export const urlExists = async (parsedUrl: string, userId: string) => {
         originalUrl: parsedUrl,
         userId: userId,
       },
+      select: {
+        originalUrl: true,
+        shortUrl: true,
+      },
     });
     return url;
   } catch (error) {

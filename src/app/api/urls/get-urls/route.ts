@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
   try {
+    console.log("route called");
     const user = await getCurrentUser();
     if (!user)
       return NextResponse.json({
@@ -15,6 +16,15 @@ export async function GET(req: Request) {
         userId: user?.id,
       },
     });
+    const aggregate = await db.url.aggregate({
+      where: {
+        userId: user?.id,
+      },
+      orderBy: {
+        clicks: "asc",
+      },
+    });
+    console.log(aggregate);
     return NextResponse.json({
       urls,
     });

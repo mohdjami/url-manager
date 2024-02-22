@@ -5,7 +5,7 @@ import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
 import sgMail from "@sendgrid/mail";
 
-const UserSchema = z.object({
+const EmailSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email"),
 });
 
@@ -17,7 +17,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 export const sendEmail = async (email: string, url: string) => {
   const msg = {
-    to: email,
+    to: EmailSchema.parse(email).email,
     from: "mohdjamikhann@gmail.com",
     subject: "Password Reset",
     text: `Click on this link to reset your password: ${url}`,

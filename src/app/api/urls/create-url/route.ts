@@ -1,16 +1,18 @@
 import { db } from "@/lib/db";
 import createShortUrl from "@/lib/urls";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/session";
 import { redis } from "@/lib/redis";
 import { findSlug, urlExists } from "@/lib/utils";
 import { slugSchema } from "@/lib/validations/urls";
 import { z } from "zod";
+import { rateLimiting } from "@/lib/rate-limiting";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const user = await getCurrentUser();
-
+    const ip = req.headers.get("x-forwarded-for") || req.ip;
+    await rateLimiting(ip!);
     let { parsedUrl, code } = await req.json();
 
     if (!user) {

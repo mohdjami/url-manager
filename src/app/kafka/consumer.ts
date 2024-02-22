@@ -11,6 +11,7 @@ export const kafka = new Kafka({
   },
   logLevel: logLevel.ERROR,
 });
+
 export async function startMessageConsumer() {
   const consumer = kafka.consumer({ groupId: "test-group" });
   await consumer.connect();

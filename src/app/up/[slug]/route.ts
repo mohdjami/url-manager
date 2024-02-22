@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { rateLimiting } from "@/lib/rate-limiting";
 import { redis } from "@/lib/redis";
 import { updateClicks } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
@@ -6,6 +7,8 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   try {
     const slug = req.url.split("/").pop();
+    const ip = req.headers.get("x-forwarded-for") || req.ip;
+    await rateLimiting(ip!);
     const cachedUrl = await redis.get(slug!);
     console.log("route called");
     if (!slug) {
@@ -56,15 +59,17 @@ export async function GET(req: NextRequest) {
         "Cache-Control": "public, max-age=31536000, immutable",
       },
     });
-  } catch (error) {
-    console.log({ error }.error);
-    return NextResponse.json(
-      {
-        error: "An error occurred",
-      },
-      {
-        status: 500,
-      }
-    );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.log(error.message);
+      return NextResponse.json(
+        {
+          error: error.message,
+        },
+        {
+          status: 500,
+        }
+      );
+    }
   }
 }

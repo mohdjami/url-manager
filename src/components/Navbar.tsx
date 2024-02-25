@@ -4,6 +4,7 @@ import HeaderRoutes from "./header-routes";
 import { Mode } from "./theme";
 import { getCurrentUser } from "@/lib/session";
 import { buttonVariants } from "./ui/button";
+import { UserAccountNav2 } from "./user/user-account-nav";
 
 const Navbar = async () => {
   const user = await getCurrentUser();
@@ -15,7 +16,9 @@ const Navbar = async () => {
           <Mode />
           &nbsp; &nbsp;
           {user ? (
-            <UserAccountNav />
+            <>
+              <UserAccountNav2 user={user} />
+            </>
           ) : (
             <Link
               className={buttonVariants({ variant: "secondary" })}

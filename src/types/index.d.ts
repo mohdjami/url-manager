@@ -9,6 +9,24 @@ export interface URL {
 }
 import { IconKeys } from "@/components/Icons";
 
+export type NavItem = {
+  title: string;
+  disabled?: boolean;
+  external?: boolean;
+  icon?: IconKeys;
+} & (
+  | {
+      href: string;
+      items?: never;
+    }
+  | {
+      href?: string;
+      items: NavLink[];
+    }
+);
+export type Navigation = {
+  data: NavItem[];
+};
 export type SiteConfig = {
   name: string;
   author: string;

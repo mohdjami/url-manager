@@ -21,7 +21,7 @@ interface Logout {
 }
 
 export function Logout({ open, onClose, onLogout, isLoading }: Logout) {
-  const handleDelete = async () => {
+  const handleLogout = async () => {
     await onLogout();
     onClose();
     window.location.reload();
@@ -40,7 +40,7 @@ export function Logout({ open, onClose, onLogout, isLoading }: Logout) {
           <div className="flex justify-center space-x-4 align-middle">
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              onClick={handleDelete}
+              onClick={handleLogout}
               className="bg-red-600 focus:ring-red-600"
             >
               {isLoading ? (

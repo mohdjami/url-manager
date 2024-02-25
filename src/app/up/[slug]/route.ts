@@ -62,6 +62,13 @@ export async function GET(req: NextRequest) {
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.log(error.message);
+      if (error.message === "Prisma Client") {
+        let n = 16; // Number of retries
+        while (n > 0) {
+          await db.url.findMany();
+          n = n / 2;
+        }
+      }
       return NextResponse.json(
         {
           error: error.message,

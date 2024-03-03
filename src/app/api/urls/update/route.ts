@@ -17,16 +17,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({
         error: "You must be logged in to do that",
       });
-    const { id, originalUrl, shortUrl } = await req.json();
+    const { id, shortUrl } = await req.json();
     const parsedCode = slugSchema.parse({ slug: shortUrl });
 
-    if (!originalUrl || !parsedCode) {
+    if (!parsedCode) {
       return NextResponse.json(
         { message: "Missing parameter" },
         { status: 400 }
       );
     }
-
+    const url = await findSlug(parsedCode.slug);
     if (await findSlug(parsedCode.slug)) {
       return NextResponse.json(
         { message: "Slug already exists" },
@@ -34,25 +34,19 @@ export async function POST(req: NextRequest) {
       );
     }
     const originalUrlExists = (await urlExists(
-      originalUrl,
+      url?.originalUrl!,
       user.id
     )) as UrlExistsResult;
-    if (originalUrlExists.originalUrl !== originalUrl) {
-      return NextResponse.json(
-        { message: "Url should be same." },
-        { status: 400 }
-      );
-    }
 
     await redis.del(originalUrlExists?.shortUrl!);
-    await redis.set(parsedCode.slug, originalUrl);
+    await redis.set(parsedCode.slug, url?.originalUrl!);
     await db.url.updateMany({
       where: {
         id,
         userId: user.id,
       },
       data: {
-        originalUrl: originalUrl || originalUrlExists?.originalUrl,
+        originalUrl: url?.originalUrl! || originalUrlExists?.originalUrl,
         shortUrl: parsedCode.slug || originalUrlExists?.shortUrl,
         updatedAt: new Date(Date.now()),
       },

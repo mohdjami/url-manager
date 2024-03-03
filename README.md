@@ -36,3 +36,9 @@ Further Enhancements:
     Implement more advanced analytics.
     Integrate custom domain functionality.
     Add social sharing features.
+
+Advanced Backend Funtionalities:
+
+    Implemented Rate limiting and request throttling using Redis
+    Implemented Redis for proper caching of urls for faster response time
+    Implemented Kafka Message Queue for sending emails and seperating non critical tasks.

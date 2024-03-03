@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
     }
 
     if (cachedUrl) {
-      await updateClicks(slug);
+      await updateClicks(slug, req);
       return NextResponse.redirect(cachedUrl || "/", {
         headers: {
           "Cache-Control": "public, max-age=31536000, immutable",
@@ -52,7 +52,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    await updateClicks(slug);
+    await updateClicks(slug, req);
     await redis.set(slug, url?.originalUrl);
     return NextResponse.redirect(url?.originalUrl || "/", {
       headers: {

@@ -11,25 +11,25 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useTheme } from "next-themes";
 import { SVGProps, use, useState } from "react";
 import { useToast } from "../ui/use-toast";
-import { Eraser } from "lucide-react";
+import { Icons } from "../Icons";
 interface Props {
   id: string;
 }
 export function DialogDemo({ id }: Props) {
-  const [originalUrl, setOriginalUrl] = useState<string>("");
   const [shortUrl, setShortUrl] = useState<string>("");
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const handleUpdate = async () => {
     try {
+      setLoading(true);
       const res = await fetch("api/urls/update", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id, originalUrl, shortUrl }),
+        body: JSON.stringify({ id, shortUrl }),
       });
       const data = await res.json();
       if (res.status === 400) {
@@ -40,13 +40,16 @@ export function DialogDemo({ id }: Props) {
       }
       if (res.status === 200) {
         toast({
-          title: "Updated Url",
+          title: "URL updated succesfully",
           variant: "default",
         });
         window.location.reload();
       }
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
+
       if (error instanceof Error) {
         toast({
           title: error.message,
@@ -72,30 +75,25 @@ export function DialogDemo({ id }: Props) {
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="url" className="text-right">
-              Original URL
-            </Label>
-            <Input
-              id="name"
-              className="col-span-3"
-              defaultValue="Youroriginalurl.com"
-              onChange={(e) => setOriginalUrl(e.target.value)}
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="url" className="text-right">
               Slug
             </Label>
             <Input
               id="url"
               className="col-span-3"
-              defaultValue="Slug for your url"
+              defaultValue="New slug"
               onChange={(e) => setShortUrl(e.target.value)}
             />
           </div>
         </div>
         <DialogFooter>
           <Button type="submit" onClick={handleUpdate}>
-            Save changes
+            {loading ? (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin">
+                Save Changes
+              </Icons.spinner>
+            ) : (
+              "Save changes"
+            )}{" "}
           </Button>
         </DialogFooter>
       </DialogContent>

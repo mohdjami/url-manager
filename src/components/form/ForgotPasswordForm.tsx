@@ -16,6 +16,8 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { ForgotPasswordFormSchema } from "@/lib/validations/forms";
+import { Icons } from "../Icons";
+import { useState } from "react";
 
 type FormValues = {
   email: string;
@@ -25,9 +27,11 @@ const ForgotPassword = () => {
   const form = useForm<FormValues>();
   const router = useRouter();
   const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
 
   const onSubmit = async (values: z.infer<typeof ForgotPasswordFormSchema>) => {
     try {
+      setLoading(true);
       await axios.post("/api/auth/forgot-password", values, {
         headers: {
           "Content-Type": "application/json",
@@ -38,8 +42,10 @@ const ForgotPassword = () => {
         description: "Password reset link has been sent to your mail",
         variant: "default",
       });
+      setLoading(false);
       router.push("/sign-in");
     } catch (error) {
+      setLoading(false);
       if (axios.isAxiosError(error) && error.response?.status === 409) {
         toast({
           title: "Error, try again",
@@ -47,6 +53,7 @@ const ForgotPassword = () => {
           variant: "destructive",
         });
       } else {
+        setLoading(false);
         toast({
           title: "Error, try again",
           description: "An error occurred. Please try again.",
@@ -77,7 +84,11 @@ const ForgotPassword = () => {
           />
         </div>
         <Button type="submit" variant="outline" className="w-full mt-6">
-          Submit
+          {loading ? (
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            "Submit"
+          )}{" "}
         </Button>
       </form>
     </Form>

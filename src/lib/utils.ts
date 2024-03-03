@@ -1,5 +1,5 @@
 import { type ClassValue, clsx } from "clsx";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { twMerge } from "tailwind-merge";
 import { db } from "./db";
 
@@ -11,7 +11,8 @@ export const handleError = (message: string) => {
   return NextResponse.json({ error: message });
 };
 
-export const updateClicks = async (slug: string) => {
+export const updateClicks = async (slug: string, req: NextRequest) => {
+  const ip = req.headers.get("x-forwarded-for") || req.ip;
   const clicks = await db.url.update({
     where: {
       shortUrl: slug,
@@ -39,6 +40,7 @@ export const updateClicks = async (slug: string) => {
   await db.urlClick.create({
     data: {
       urlId: url?.id as string,
+      ipAddress: ip,
     },
   });
 

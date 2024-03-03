@@ -31,6 +31,7 @@ const ResetPassword = () => {
   const [isValid, setIsValid] = useState(null);
   const router = useRouter();
   const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const verify = async () => {
@@ -61,6 +62,7 @@ const ResetPassword = () => {
   } else {
     const onSubmit = async (data: z.infer<typeof ResetPasswordFormSchema>) => {
       try {
+        setLoading(true);
         await axios.post("/api/auth/reset-password", {
           ...data,
           token,
@@ -73,7 +75,10 @@ const ResetPassword = () => {
             "Password has been updated successfully, you can now login",
           variant: "default",
         });
+        setLoading(false);
       } catch (error) {
+        setLoading(false);
+
         toast({
           title: "Something Went Very Wrong",
           variant: "destructive",
@@ -125,8 +130,12 @@ const ResetPassword = () => {
             />
           </div>
 
-          <Button className="w-full mt-6" variant="outline" type="submit">
-            Submit
+          <Button type="submit" variant="outline" className="w-full mt-6">
+            {loading ? (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              "Submit"
+            )}{" "}
           </Button>
         </form>
       </Form>

@@ -65,7 +65,7 @@ export default function Hero() {
       <main className="flex-1">
         <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
           <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center space-y-4 text-center">
+            <div className="grid gap-4  sm:grid-cols-2 items-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="py-5">
                   <div className="py-3">
@@ -78,8 +78,7 @@ export default function Hero() {
                       The essential tool for sharing. Create custom short links,
                       measure traffic, and grow your audience.
                     </div>
-                  </div>
-                  <div>
+
                     <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
                       Enter your URL below to shorten it. Share it with the
                       world.

@@ -69,18 +69,17 @@ export default function Hero() {
               <div className="space-y-2">
                 <div className="py-5">
                   <div className="py-3">
-                    <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
+                    <h1 className="text-3xl font-bold tracking-tighter text-left sm:text-4xl md:text-5xl lg:text-6xl/none">
                       URL Shortener
                     </h1>
                   </div>
-                  <div className="py-3">
-                    <div className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
+                  <div className="py-6 text-left font-medium">
+                    <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
                       The essential tool for sharing. Create custom short links,
                       measure traffic, and grow your audience.
-                    </div>
-
+                    </p>
                     <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                      Enter your URL below to shorten it. Share it with the
+                      Enter your URL below to shorten it and share it with the
                       world.
                     </p>
                   </div>

@@ -21,6 +21,8 @@ export const siteConfig: SiteConfig = {
   },
   links: {
     github: "https://github.com/mohdjami/url-shortener",
+    linkedin: "https://www.linkedin.com/in/mohdjami/",
+    twitter: "https://github.com/mohdjami/url-shortener",
   },
   ogImage: `${process.env.NEXT_PUBLIC_URL}/favicon.ico`,
 };

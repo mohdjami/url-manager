@@ -80,8 +80,11 @@ const SignInForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
-        <div className="space-y-2">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="w-full py-10 space-y-2 md:space-y-2"
+      >
+        <div className="space-y-2 md:space-y-2">
           <FormField
             control={form.control}
             name="email"

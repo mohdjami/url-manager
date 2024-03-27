@@ -1,3 +1,4 @@
+import { FaLinkedin } from "react-icons/fa";
 export interface URL {
   id: string;
   shortUrl: string;
@@ -38,6 +39,8 @@ export type SiteConfig = {
   };
   links: {
     github: string;
+    linkedin: string;
+    twitter: string;
   };
   ogImage: string;
 };

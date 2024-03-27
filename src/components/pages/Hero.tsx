@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { JSX, SVGProps, use, useState } from "react";
 import {
   Card,
@@ -16,6 +16,9 @@ import createShortUrl from "@/lib/urls";
 import { fetchUrl } from "@/lib/fetchUrl";
 import { z } from "zod";
 import { Icons } from "../Icons";
+import { siteConfig } from "@/config/site";
+import { cn } from "@/lib/utils";
+import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 
 export default function Hero() {
   const { data: session } = useSession();
@@ -61,9 +64,9 @@ export default function Hero() {
   };
 
   return (
-    <div className="container flex flex-col min-h-[100dvh] py-8">
+    <div className="container flex flex-col py-4">
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
+        <section className="w-full py-8 md:py-24 lg:py-32 xl:py-40">
           <div className="container px-4 md:px-6">
             <div className="grid gap-4  sm:grid-cols-2 items-center space-y-4 text-center">
               <div className="space-y-2">
@@ -75,12 +78,11 @@ export default function Hero() {
                   </div>
                   <div className="py-6 text-left font-medium">
                     <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                      The essential tool for sharing. Create custom short links,
-                      measure traffic, and grow your audience.
+                      The essential tool for Creating and Sharing custom short
+                      links, measure traffic, and grow your audience.
                     </p>
                     <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                      Enter your URL below to shorten it and share it with the
-                      world.
+                      Enter your URL to shorten it and share it with the world.
                     </p>
                   </div>
                 </div>
@@ -148,23 +150,17 @@ export default function Hero() {
                   </CardDescription>
                 </Card>
               </div>
+              <Link
+                href={siteConfig.links.github}
+                className="rounded-2xl px-4 py-1.5 text-sm bg-black text-white font-medium dark:bg-muted  dark:text-white"
+                target="_blank"
+              >
+                Feel Free to View Codebase On my Github
+              </Link>
             </div>
           </div>
         </section>
       </main>
-      <footer className="flex flex-col gap-2 sm:flex-row  w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          All rights reserved.
-        </p>
-        <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-          <Link className="text-xs hover:underline underline-offset-4" href="#">
-            Terms of Service
-          </Link>
-          <Link className="text-xs hover:underline underline-offset-4" href="#">
-            Privacy
-          </Link>
-        </nav>
-      </footer>
     </div>
   );
 }

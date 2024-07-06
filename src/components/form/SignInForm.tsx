@@ -82,7 +82,7 @@ const SignInForm = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full py-10 space-y-2 md:space-y-2"
+        className="w-full py-2 space-y-2 md:space-y-2"
       >
         <div className="space-y-2 md:space-y-2">
           <FormField

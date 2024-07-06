@@ -1,6 +1,6 @@
-URL Shortener with MERN and Additional Features
+URL Shortener with Next.js and Additional Features
 
-This is a URL shortener application built with the MERN stack (Next.js , Prisma, Supabase, Kafka, Redis, Nextauth, Tailwind) offering advanced functionalities beyond basic URL shortening.
+This is a URL shortener application built with the Next.js stack (Next.js , Prisma, Supabase, Kafka, Redis, Nextauth, Tailwind) offering advanced functionalities beyond basic URL shortening.
 
 Core Features:
 
@@ -42,3 +42,8 @@ Advanced Backend Funtionalities:
     Implemented Rate limiting and request throttling using Redis
     Implemented Redis for proper caching of urls for faster response time
     Implemented Kafka Message Queue for sending emails and seperating non critical tasks.
+
+For your Convinience, Use these credentials to directly start Testing the application.
+
+    jamikhan8439@gmail.com
+    12341234

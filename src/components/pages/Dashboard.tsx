@@ -88,13 +88,18 @@ export default function Dashboard() {
                       <Link
                         href={`${process.env.NEXT_PUBLIC_URL}/up/${url.shortUrl}`}
                       >
-                        {`${process.env.NEXT_PUBLIC_URL}/up/${url.shortUrl}`}
+                        {" "}
+                        <a target="_blank" rel="noopener noreferrer">
+                          {`${process.env.NEXT_PUBLIC_URL}/up/${url.shortUrl}`}
+                        </a>
                       </Link>
                     </TableCell>
                     <TableCell>
-                      <Link
-                        href={`${url.originalUrl}`}
-                      >{`${url.originalUrl}`}</Link>
+                      <Link href={`${url.originalUrl}`}>
+                        <a target="_blank" rel="noopener noreferrer">
+                          {`${url.originalUrl}`}
+                        </a>
+                      </Link>
                     </TableCell>
                     <TableCell>{`${url.clicks}`}</TableCell>
                     <TableCell className="flex justify-end gap-2">
@@ -109,7 +114,9 @@ export default function Dashboard() {
                 ))
               ) : (
                 <TableCell className="font-semibold">
-                  Start Creating URLs
+                  <Link href="/dashboard">
+                    Knock! Knock! Lets create a URL right?
+                  </Link>
                 </TableCell>
               )}
             </TableBody>

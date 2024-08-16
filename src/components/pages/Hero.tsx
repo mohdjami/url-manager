@@ -139,7 +139,10 @@ export default function Hero() {
                           className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400"
                           href={`${process.env.NEXT_PUBLIC_URL}/up/${displayCode}`}
                         >
-                          {`${process.env.NEXT_PUBLIC_URL}/up/${displayCode}`}
+                          {" "}
+                          <a target="_blank" rel="noopener noreferrer">
+                            {`${process.env.NEXT_PUBLIC_URL}/up/${displayCode}`}
+                          </a>
                         </Link>
                       ) : (
                         <CardContent>

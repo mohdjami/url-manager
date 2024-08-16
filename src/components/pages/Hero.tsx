@@ -19,10 +19,13 @@ import { Icons } from "../Icons";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
+import { CopyCheckIcon, CopyIcon } from "lucide-react";
 
 export default function Hero() {
   const { data: session } = useSession();
   const [url, setUrl] = useState<string>("");
+  const [copy, setCopy] = useState<boolean>(false);
+
   const [loading, setLoading] = useState(false);
   const [success, setSucces] = useState(false);
   const [displayCode, setDisplayCode] = useState("");
@@ -133,16 +136,26 @@ export default function Hero() {
                 </Card>{" "}
                 <Card>
                   <CardDescription>
-                    <CardTitle className="py-5">
+                    <CardTitle className="p-5">
                       {displayCode || success ? (
                         <Link
-                          className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400"
+                          className="flex justify-between items-center mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400"
                           href={`${process.env.NEXT_PUBLIC_URL}/up/${displayCode}`}
                         >
-                          {" "}
-                          <a target="_blank" rel="noopener noreferrer">
-                            {`${process.env.NEXT_PUBLIC_URL}/up/${displayCode}`}
-                          </a>
+                          {`${process.env.NEXT_PUBLIC_URL}/up/${displayCode}`}
+                          <Button
+                            onClick={() => {
+                              setCopy(true);
+                              navigator.clipboard.writeText(
+                                `${process.env.NEXT_PUBLIC_URL}/up/${displayCode}`
+                              );
+                              setTimeout(() => {
+                                setCopy(false);
+                              }, 2000);
+                            }}
+                          >
+                            {copy ? <CopyCheckIcon /> : <CopyIcon />}
+                          </Button>
                         </Link>
                       ) : (
                         <CardContent>

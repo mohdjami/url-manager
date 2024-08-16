@@ -16,8 +16,11 @@ import { DialogDemo } from "../dialogs/edit-dialogue";
 import { AddNewUrl } from "../dialogs/add-new-dialogue";
 import { DeleteButton } from "../buttons/url-delete-button";
 import { Icons } from "../Icons";
+import { CopyCheckIcon, CopyIcon } from "lucide-react";
 export default function Dashboard() {
   const [urls, setUrls] = useState([]);
+  const [copy, setCopy] = useState<boolean>(false);
+
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const { toast } = useToast();
@@ -86,19 +89,29 @@ export default function Dashboard() {
                   <TableRow className="divide-y rounded-lg" key={url.id}>
                     <TableCell className="font-semibold" typeof="url">
                       <Link
+                        className="flex justify-between items-center mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400"
                         href={`${process.env.NEXT_PUBLIC_URL}/up/${url.shortUrl}`}
                       >
                         {" "}
-                        <a target="_blank" rel="noopener noreferrer">
-                          {`${process.env.NEXT_PUBLIC_URL}/up/${url.shortUrl}`}
-                        </a>
+                        {`${process.env.NEXT_PUBLIC_URL}/up/${url.shortUrl}`}
+                        <Button
+                          onClick={() => {
+                            setCopy(true);
+                            navigator.clipboard.writeText(
+                              `${process.env.NEXT_PUBLIC_URL}/up/${url.shortUrl}`
+                            );
+                            setTimeout(() => {
+                              setCopy(false);
+                            }, 2000);
+                          }}
+                        >
+                          {copy ? <CopyCheckIcon /> : <CopyIcon />}
+                        </Button>
                       </Link>
                     </TableCell>
                     <TableCell>
                       <Link href={`${url.originalUrl}`}>
-                        <a target="_blank" rel="noopener noreferrer">
-                          {`${url.originalUrl}`}
-                        </a>
+                        {`${url.originalUrl}`}
                       </Link>
                     </TableCell>
                     <TableCell>{`${url.clicks}`}</TableCell>

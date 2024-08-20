@@ -17,10 +17,22 @@ import { AddNewUrl } from "../dialogs/add-new-dialogue";
 import { DeleteButton } from "../buttons/url-delete-button";
 import { Icons } from "../Icons";
 import { CopyCheckIcon, CopyIcon } from "lucide-react";
+interface Copy {
+  [key: string]: boolean;
+}
 export default function Dashboard() {
   const [urls, setUrls] = useState([]);
   const [copy, setCopy] = useState<boolean>(false);
-
+  const [copyStatus, setCopyStatus] = useState<Copy>({
+    "": false,
+  });
+  const handleCopy = (slug: string) => {
+    navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_URL}/up/${slug}`);
+    setCopyStatus((prevStatus) => ({ ...prevStatus, [slug]: true }));
+    setTimeout(() => {
+      setCopyStatus((prevStatus) => ({ ...prevStatus, [slug]: false }));
+    }, 2000);
+  };
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const { toast } = useToast();
@@ -79,35 +91,31 @@ export default function Dashboard() {
             </TableHeader>
             <TableBody>
               {loading ? (
-                <TableRow className="divide-y rounded-lg">
-                  <TableCell className="font-semibold items-center">
-                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                  </TableCell>
-                </TableRow>
+                <div className="flex justify-center items-center mt-10 text-xl md:text-xl dark:text-gray-400">
+                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                </div>
               ) : urls.length > 0 ? (
                 urls.map((url: any) => (
                   <TableRow className="divide-y rounded-lg" key={url.id}>
-                    <TableCell className="font-semibold" typeof="url">
+                    <TableCell className="font-semibold flex " typeof="url">
                       <Link
                         className="flex justify-between items-center mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400"
                         href={`${process.env.NEXT_PUBLIC_URL}/up/${url.shortUrl}`}
                       >
-                        {" "}
                         {`${process.env.NEXT_PUBLIC_URL}/up/${url.shortUrl}`}
-                        <Button
-                          onClick={() => {
-                            setCopy(true);
-                            navigator.clipboard.writeText(
-                              `${process.env.NEXT_PUBLIC_URL}/up/${url.shortUrl}`
-                            );
-                            setTimeout(() => {
-                              setCopy(false);
-                            }, 2000);
-                          }}
-                        >
-                          {copy ? <CopyCheckIcon /> : <CopyIcon />}
-                        </Button>
                       </Link>
+                      <Button
+                        key={url.shortUrl}
+                        onClick={() => {
+                          handleCopy(url.shortUrl);
+                        }}
+                      >
+                        {copyStatus[url.shortUrl] ? (
+                          <CopyCheckIcon />
+                        ) : (
+                          <CopyIcon />
+                        )}
+                      </Button>
                     </TableCell>
                     <TableCell>
                       <Link href={`${url.originalUrl}`}>
@@ -120,7 +128,6 @@ export default function Dashboard() {
                         <DialogDemo id={url.id} />
                         <span className="sr-only">Edit</span>
                       </Button>
-
                       <DeleteButton id={url.id} />
                     </TableCell>
                   </TableRow>

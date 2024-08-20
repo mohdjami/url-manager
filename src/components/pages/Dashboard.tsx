@@ -20,7 +20,7 @@ import { CopyCheckIcon, CopyIcon } from "lucide-react";
 interface Copy {
   [key: string]: boolean;
 }
-export default function Dashboard() {
+export default function Dashboard(props) {
   const [urls, setUrls] = useState([]);
   const [copy, setCopy] = useState<boolean>(false);
   const [copyStatus, setCopyStatus] = useState<Copy>({
@@ -97,30 +97,56 @@ export default function Dashboard() {
               ) : urls.length > 0 ? (
                 urls.map((url: any) => (
                   <TableRow className="divide-y rounded-lg" key={url.id}>
-                    <TableCell className="font-semibold flex " typeof="url">
-                      <Link
-                        className="flex justify-between items-center mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400"
-                        href={`${process.env.NEXT_PUBLIC_URL}/up/${url.shortUrl}`}
-                      >
-                        {`${process.env.NEXT_PUBLIC_URL}/up/${url.shortUrl}`}
-                      </Link>
-                      <Button
-                        key={url.shortUrl}
-                        onClick={() => {
-                          handleCopy(url.shortUrl);
-                        }}
-                      >
-                        {copyStatus[url.shortUrl] ? (
-                          <CopyCheckIcon />
-                        ) : (
-                          <CopyIcon />
-                        )}
-                      </Button>
+                    <TableCell
+                      className="font-semibold flex gap-2"
+                      typeof="url"
+                    >
+                      {" "}
+                      <div className="flex items-start gap-2">
+                        <Link
+                          className="flex  items-center gap-2"
+                          href={`${process.env.NEXT_PUBLIC_URL}/up/${url.shortUrl}`}
+                        >
+                          {`${process.env.NEXT_PUBLIC_URL}/up/${url.shortUrl}`}
+                        </Link>
+                        <Button
+                          className=" ml-4 h-8 w-8"
+                          key={url.shortUrl}
+                          onClick={() => {
+                            handleCopy(url.shortUrl);
+                          }}
+                          size="icon"
+                        >
+                          {copyStatus[url.shortUrl] ? (
+                            <CopyCheckIcon className="h-4 w-4" />
+                          ) : (
+                            <CopyIcon className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </div>
                     </TableCell>
-                    <TableCell>
-                      <Link href={`${url.originalUrl}`}>
-                        {`${url.originalUrl}`}
-                      </Link>
+
+                    <TableCell className="text-gray-500">
+                      <span className="sr-only">Original URL:</span>
+                      <div className="flex items-start gap-2">
+                        <Link className="w-[300px]" href={`${url.originalUrl}`}>
+                          {`${url.originalUrl}`}
+                        </Link>
+                        <Button
+                          className=" ml-4 h-8 w-8"
+                          key={url.originalUrl}
+                          onClick={() => {
+                            handleCopy(url.originalUrl);
+                          }}
+                          size="icon"
+                        >
+                          {copyStatus[url.originalUrl] ? (
+                            <CopyCheckIcon className="h-4 w-4" />
+                          ) : (
+                            <CopyIcon className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </div>
                     </TableCell>
                     <TableCell>{`${url.clicks}`}</TableCell>
                     <TableCell className="flex justify-end gap-2">

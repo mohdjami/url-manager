@@ -20,7 +20,7 @@ import { CopyCheckIcon, CopyIcon } from "lucide-react";
 interface Copy {
   [key: string]: boolean;
 }
-export default function Dashboard(props) {
+export default function Dashboard() {
   const [urls, setUrls] = useState([]);
   const [copy, setCopy] = useState<boolean>(false);
   const [copyStatus, setCopyStatus] = useState<Copy>({

@@ -25,7 +25,6 @@ import { SignInFormFormSchema } from "@/lib/validations/forms";
 import { createClient } from "@/supabase/client";
 const SignInForm = () => {
   const supabase = createClient();
-
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();

@@ -3,11 +3,13 @@ import { NextResponse } from "next/server";
 
 export async function userExist(email: string) {
   const supabase = createClient();
+  console.log(email);
   const { data: userExist, error: userError } = await supabase
     .from("User")
     .select("*")
     .eq("email", email)
     .single();
+
   if (userError || !userExist) {
     console.error("User does not exist in the custom table:", userError);
 
@@ -22,7 +24,7 @@ export async function createUser(id: string, email: string) {
     {
       id, // Use the user ID from the authentication data
       email,
-      registered_at: new Date().toISOString(),
+      createdAt: new Date().toISOString(),
       // Add other fields as necessary
     },
   ]);

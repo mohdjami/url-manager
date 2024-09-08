@@ -60,7 +60,7 @@ const SignUpForm = () => {
             {
               id: authData.user?.id, // Use the user ID from the authentication data
               email: values.email,
-              registered_at: new Date().toISOString(),
+              createdAt: new Date().toISOString(),
               username: values.username,
               password: values.password,
               // Add other fields as necessary

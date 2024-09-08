@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { NextRequest, NextResponse } from "next/server";
 import { twMerge } from "tailwind-merge";
 import db from "./db";
+import { createClient } from "@/supabase/client";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -57,7 +58,12 @@ export const findSlug = async (slug: string) => {
 };
 
 export const urlExists = async (parsedUrl: string, userId: string) => {
+  const supabase = createClient();
   try {
+    const { data, error } = await supabase
+      .from("Url")
+      .select("*")
+      .eq("userId", userId);
     const url = await db.url.findUnique({
       where: {
         originalUrl: parsedUrl,

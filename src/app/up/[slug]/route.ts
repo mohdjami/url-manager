@@ -1,4 +1,4 @@
-import { db } from "@/lib/db";
+import db from "@/lib/db";
 import { rateLimiting } from "@/lib/rate-limiting";
 import { redis } from "@/lib/redis";
 import { updateClicks } from "@/lib/utils";

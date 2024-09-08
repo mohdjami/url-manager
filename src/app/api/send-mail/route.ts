@@ -1,6 +1,6 @@
 //logic for sending mails to the user with the link
 import sgMail from "@sendgrid/mail";
-import { db } from "@/lib/db";
+import db from "@/lib/db";
 import { NextResponse } from "next/server";
 import { produceMessage } from "@/app/kafka/producer";
 import { startMessageConsumer } from "@/app/kafka/consumer";

@@ -22,8 +22,10 @@ import GithubSignInButton from "../buttons/GithubSignInButton";
 import { useState } from "react";
 import { Icons } from "../Icons";
 import { SignInFormFormSchema } from "@/lib/validations/forms";
-
+import { createClient } from "@/supabase/client";
 const SignInForm = () => {
+  const supabase = createClient();
+
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
@@ -55,19 +57,30 @@ const SignInForm = () => {
   const onSubmit = async (values: z.infer<typeof SignInFormFormSchema>) => {
     try {
       setLoading(true);
-      const result = await signIn("credentials", {
-        email: values.email,
-        password: values.password,
-        redirect: false,
-      });
-      if (result?.error === "CredentialsSignin") {
+      const { data, error } = await supabase
+        .from("User")
+        .select("*")
+        .eq("email", values.email)
+        .single();
+      if (error || !data) {
+        console.error("User does not exist in the custom table:", error);
         setLoading(false);
+        return;
+      }
+      const { data: authData, error: authError } =
+        await supabase.auth.signInWithPassword({
+          email: values.email,
+          password: values.password,
+        });
+      if (authError) {
         toast({
           title: "Either email or password is wrong",
           description:
             "Please sign up if you are not a user or click on forgot password t reset your password",
           variant: "destructive",
         });
+        setLoading(false);
+        router.push("/error");
       } else {
         router.push("/dashboard");
         router.refresh();

@@ -1,4 +1,4 @@
-import { db } from "@/lib/db";
+import db from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
 import { NextResponse } from "next/server";
 
@@ -30,7 +30,7 @@ export async function POST(req: Request) {
         ],
       },
       orderBy: {
-        clicks: "desc",
+        createdAt: "desc",
       },
     });
 

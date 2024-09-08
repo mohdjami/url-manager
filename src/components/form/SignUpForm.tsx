@@ -22,8 +22,10 @@ import GithubSignInButton from "../buttons/GithubSignInButton";
 import { useState } from "react";
 import { Icons } from "../Icons";
 import { SignUpFormFormSchema } from "@/lib/validations/forms";
-
+import { createClient } from "@/supabase/client";
 const SignUpForm = () => {
+  const supabase = createClient();
+
   const router = useRouter();
   const { toast } = useToast();
   const [loading, isLoading] = useState(false);
@@ -39,39 +41,58 @@ const SignUpForm = () => {
   const onSubmit = async (values: z.infer<typeof SignUpFormFormSchema>) => {
     try {
       isLoading(true);
-      const response = await axios.post("/api/auth/user", values);
+      const { data: authData, error } = await supabase.auth.signUp({
+        email: values.email,
+        password: values.password,
+      });
+      if (error) {
+        throw error;
+      } else {
+      }
 
-      if (response.status === 201) {
-        isLoading(false);
+      isLoading(false);
 
-        try {
-          router.push("/sign-in");
-          await axios.post("/api/send-mail", values);
-          toast({
-            title:
-              "A verification email has been sent to your email address. It may take some time to appear in your inbox.",
-            variant: "default",
-          });
-        } catch (error) {
+      try {
+        // await axios.post("/api/send-mail", values);
+        const { data: userData, error: userError } = await supabase
+          .from("User")
+          .insert([
+            {
+              id: authData.user?.id, // Use the user ID from the authentication data
+              email: values.email,
+              registered_at: new Date().toISOString(),
+              username: values.username,
+              password: values.password,
+              // Add other fields as necessary
+            },
+          ]);
+        if (userError) {
+          console.error("Error adding user to custom table:", userError);
           isLoading(false);
-
-          toast({
-            title: "Error, try again",
-            description: "Something went wrong",
-            variant: "destructive",
-          });
+          return;
         }
+        router.push("/sign-in");
+        toast({
+          title:
+            "A verification email has been sent to your email address. It may take some time to appear in your inbox.",
+          variant: "default",
+        });
+      } catch (error) {
+        isLoading(false);
+        toast({
+          title: "Error, try again",
+          description: "Something went wrong",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       isLoading(false);
-
       toast({
         title: "User Already Exists Or Something Went wrong",
         variant: "destructive",
       });
     }
   };
-
   return (
     <Form {...form}>
       <form

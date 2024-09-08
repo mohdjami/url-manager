@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth/next";
 import { z } from "zod";
 
 import { authOptions } from "@/lib/auth";
-import { db } from "@/lib/db";
+import db from "@/lib/db";
 import { userNameSchema } from "@/lib/validations/user";
 
 const routeContextSchema = z.object({

@@ -17,6 +17,7 @@ import { AddNewUrl } from "../dialogs/add-new-dialogue";
 import { DeleteButton } from "../buttons/url-delete-button";
 import { Icons } from "../Icons";
 import { CopyCheckIcon, CopyIcon } from "lucide-react";
+import { set } from "zod";
 interface Copy {
   [key: string]: boolean;
 }
@@ -49,7 +50,7 @@ export default function Dashboard() {
           body: JSON.stringify({ search: search }),
         });
         const data = await res.json();
-        setUrls(data.urls);
+        data.urls ? setUrls(data.urls) : setUrls([]);
         setLoading(false);
       } catch (error) {
         setLoading(false);

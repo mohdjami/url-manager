@@ -1,6 +1,6 @@
 //logic for sending mails to the user with the link
 
-import { db } from "@/lib/db";
+import db from "@/lib/db";
 import { NextResponse } from "next/server";
 // import { useRouter } from "next/navigation";
 

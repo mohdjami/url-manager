@@ -1,7 +1,8 @@
-import { db } from "@/lib/db";
-import { NextResponse } from "next/server";
+import db from "@/lib/db";
+import { NextRequest, NextResponse } from "next/server";
 import { hash } from "bcrypt";
 import { z } from "zod";
+import { createClient } from "../../../../supabase/server";
 
 const UserSchema = z.object({
   username: z.string().min(1, "Username is required").max(100),
@@ -51,4 +52,15 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
+}
+
+export async function GET(req: NextRequest, res: NextResponse) {
+  const supabase = createClient();
+  const { data, error } = await supabase.from("user").select("*");
+  console.log(data, error);
+
+  // const users = await db.user.findMany();
+  return NextResponse.json({
+    data,
+  });
 }

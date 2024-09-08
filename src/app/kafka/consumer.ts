@@ -1,6 +1,6 @@
 import { Kafka, Producer, logLevel } from "kafkajs";
 import sgMail from "@sendgrid/mail";
-import { db } from "@/lib/db";
+import db from "@/lib/db";
 export const kafka = new Kafka({
   brokers: [process.env.KAFKA_BROKER!],
   ssl: true,

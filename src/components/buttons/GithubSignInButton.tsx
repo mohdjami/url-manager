@@ -1,12 +1,13 @@
 import { FC, JSX, ReactNode, SVGProps, useState } from "react";
 import { Button } from "../ui/button";
 import { signIn } from "next-auth/react";
-
+import { createClient } from "@/supabase/client";
 interface GithubSignInButtonProps {
   children: ReactNode;
 }
 
 const GithubSignInButton: FC<GithubSignInButtonProps> = ({ children }) => {
+  const supabase = createClient();
   const [isLoading, setLoading] = useState<boolean>(false);
 
   return (
@@ -14,7 +15,12 @@ const GithubSignInButton: FC<GithubSignInButtonProps> = ({ children }) => {
       disabled={isLoading}
       onClick={async () => {
         setLoading(true);
-        await signIn("github", { callbackUrl: "/dashboard" });
+        await supabase.auth.signInWithOAuth({
+          provider: "github",
+          options: {
+            redirectTo: `${process.env.NEXT_PUBLIC_URL}/auth/callback`,
+          },
+        });
         setLoading(false);
       }}
       className="flex items-center space-x-2 w-full"

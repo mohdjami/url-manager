@@ -1,4 +1,4 @@
-import { db } from "./db";
+import db from "./db";
 
 const isVarified = async (email: string) => {
   const user = await db.user.findUnique({

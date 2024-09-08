@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  web:
+    build: .
+    ports:
+      - 3034:3000
+
+    env_file:
+      - .env
+
+    restart: always

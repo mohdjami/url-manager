@@ -6,9 +6,11 @@ export async function userExist(email: string) {
   console.log(email);
   const { data: userExist, error: userError } = await supabase
     .from("User")
-    .select("*")
+    .select("id")
     .eq("email", email)
     .single();
+
+  console.log(userExist);
 
   if (userError || !userExist) {
     console.error("User does not exist in the custom table:", userError);
@@ -20,6 +22,7 @@ export async function userExist(email: string) {
 
 export async function createUser(id: string, email: string) {
   const supabase = createClient();
+  console.log(id);
   const { error: userError } = await supabase.from("User").insert([
     {
       id, // Use the user ID from the authentication data

@@ -4,13 +4,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { redis } from "@/lib/redis";
 import { slugSchema } from "@/lib/validations/urls";
 import { z } from "zod";
-import { findSlug, urlExists } from "@/lib/utils";
+import { findSlug, urlExists } from "@/lib/urls";
 import { UrlExistsResult } from "@/types";
 import { rateLimiting } from "@/lib/rate-limiting";
 
 export async function POST(req: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const { supabase, user } = await getCurrentUser();
     const ip = req.headers.get("x-forwarded-for") || req.ip;
     await rateLimiting(ip!);
     if (!user)

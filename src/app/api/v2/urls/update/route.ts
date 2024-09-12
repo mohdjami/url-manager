@@ -4,13 +4,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { redis } from "@/lib/redis";
 import { slugSchema } from "@/lib/validations/urls";
 import { z } from "zod";
-import { findSlug, urlExists } from "@/lib/utils";
 import { UrlExistsResult } from "@/types";
 import { rateLimiting } from "@/lib/rate-limiting";
+import { findSlug, urlExists } from "@/lib/urls";
 
 export async function POST(req: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const { supabase, user } = await getCurrentUser();
     const ip = req.headers.get("x-forwarded-for") || req.ip;
     await rateLimiting(ip!);
     if (!user)
@@ -26,31 +26,37 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    const url = await findSlug(parsedCode.slug);
-    if (await findSlug(parsedCode.slug)) {
+    const slugExists = await findSlug(parsedCode.slug);
+    if (slugExists) {
       return NextResponse.json(
         { message: "Slug already exists" },
         { status: 400 }
       );
     }
-    const originalUrlExists = (await urlExists(
-      url?.originalUrl!,
-      user.id
-    )) as UrlExistsResult;
+    const { data: urlExists, error: urlExistError } = await supabase
+      .from("Url")
+      .select("*")
+      .eq("id", id)
+      .single();
 
-    await redis.del(originalUrlExists?.shortUrl!);
-    await redis.set(parsedCode.slug, url?.originalUrl!);
-    await db.url.updateMany({
-      where: {
-        id,
-        userId: user.id,
-      },
-      data: {
-        originalUrl: url?.originalUrl! || originalUrlExists?.originalUrl,
-        shortUrl: parsedCode.slug || originalUrlExists?.shortUrl,
-        updatedAt: new Date(Date.now()),
-      },
+    await redis.del(urlExists?.shortUrl!);
+    await redis.set(parsedCode.slug, urlExists.originalUrl!);
+    await supabase.from("Url").update({
+      originalUrl: urlExists?.originalUrl! || urlExists?.originalUrl,
+      shortUrl: parsedCode.slug || urlExists?.shortUrl,
+      updatedAt: new Date(Date.now()),
     });
+    // await db.url.updateMany({
+    //   where: {
+    //     id,
+    //     userId: user.id,
+    //   },
+    //   data: {
+    //     originalUrl: url?.originalUrl! || originalUrlExists?.originalUrl,
+    //     shortUrl: parsedCode.slug || originalUrlExists?.shortUrl,
+    //     updatedAt: new Date(Date.now()),
+    //   },
+    // });
     return NextResponse.json(
       {
         message: "Url updated",

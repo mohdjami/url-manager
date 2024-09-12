@@ -1,3 +1,4 @@
+"use client";
 import { FC, JSX, ReactNode, SVGProps, useState } from "react";
 import { Button } from "../ui/button";
 import { signIn } from "next-auth/react";

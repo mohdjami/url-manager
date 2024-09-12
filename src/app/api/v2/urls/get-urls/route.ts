@@ -4,15 +4,12 @@ import { createClient } from "@/supabase/server";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
-  const supabase = createClient();
   try {
-    console.log("route called");
-    // const user = await getCurrentUser();
-    // console.log(user);
-    // if (!user)
-    //   return NextResponse.json({
-    //     error: "You must be logged in to do that",
-    //   });
+    const { supabase, user } = await getCurrentUser();
+    if (!user)
+      return NextResponse.json({
+        error: "You must be logged in to do that",
+      });
     // = await db.url.findMany();
     const { data: urls, error } = await supabase.from("Url").select("*");
     if (error) {
@@ -22,7 +19,7 @@ export async function GET(req: Request) {
       });
     }
     // const urls = await supabase.from("Url").select("*");
-    console.log(urls);
+    // console.log(urls);
     // const aggregate = await db.url.aggregate({
     //   where: {
     //     userId: user?.id,

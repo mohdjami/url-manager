@@ -24,7 +24,7 @@ export function DialogDemo({ id }: Props) {
   const handleUpdate = async () => {
     try {
       setLoading(true);
-      const res = await fetch("api/urls/update", {
+      const res = await fetch("api/v2/urls/update", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

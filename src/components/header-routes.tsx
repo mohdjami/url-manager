@@ -3,7 +3,7 @@ import { HandMetal, Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { getCurrentUser } from "@/lib/session";
 const HeaderRoutes = async () => {
-  const user = await getCurrentUser();
+  const { supabase, user } = await getCurrentUser();
 
   const loggedIn = [
     {

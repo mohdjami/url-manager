@@ -3,7 +3,7 @@ import { getCurrentUser } from "@/lib/session";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const user = await getCurrentUser();
+  const { supabase, user } = await getCurrentUser();
   if (!user) {
     return NextResponse.json(
       {

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 export default async function SettingsPage() {
-  const user = await getCurrentUser();
+  const { supabase, user } = await getCurrentUser();
 
   if (!user) {
     redirect(authOptions?.pages?.signIn || "/signin");
@@ -29,7 +29,7 @@ export default async function SettingsPage() {
         text="Manage account and app settings."
       />
       <div className="grid grid-cols-2 gap-6">
-        <UserNameForm user={{ id: user.id, name: user.name || "" }} />
+        <UserNameForm user={{ id: user.id, name: user.email || "" }} />
         <AppearanceForm />
       </div>
     </main>

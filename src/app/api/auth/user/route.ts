@@ -57,8 +57,6 @@ export async function POST(req: Request) {
 export async function GET(req: NextRequest, res: NextResponse) {
   const supabase = createClient();
   const { data, error } = await supabase.from("user").select("*");
-  console.log(data, error);
-
   // const users = await db.user.findMany();
   return NextResponse.json({
     data,

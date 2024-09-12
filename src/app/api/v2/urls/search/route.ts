@@ -3,7 +3,7 @@ import { getCurrentUser } from "@/lib/session";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const user = await getCurrentUser();
+  const { supabase, user } = await getCurrentUser();
   if (!user) {
     return NextResponse.json(
       {
@@ -16,23 +16,29 @@ export async function POST(req: Request) {
   }
   try {
     const { search } = await req.json();
-    const urls = await db.url.findMany({
-      where: {
-        AND: [
-          {
-            originalUrl: {
-              contains: search,
-            },
-          },
-          {
-            userId: user.id,
-          },
-        ],
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+    const { data: urls, error } = await supabase
+      .from("Url")
+      .select("*")
+      .eq("userId", user.id)
+      .ilike("originalUrl", `%${search}%`);
+    // .eq("userId", user.id);
+    // const urls = await db.url.findMany({
+    //   where: {
+    //     AND: [
+    //       {
+    //         originalUrl: {
+    //           contains: search,
+    //         },
+    //       },
+    //       {
+    //         userId: user.id,
+    //       },
+    //     ],
+    //   },
+    //   orderBy: {
+    //     createdAt: "desc",
+    //   },
+    // });
 
     return NextResponse.json(
       {

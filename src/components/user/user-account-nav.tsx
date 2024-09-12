@@ -17,6 +17,7 @@ import { UserAvatar } from "@/components/user/user-avatar";
 import { Button } from "../ui/button";
 import { Logout } from "../dialogs/logout-dialog";
 import { useState } from "react";
+import { createClient } from "@/supabase/client";
 
 interface UserAccountNavProps extends React.HTMLAttributes<HTMLDivElement> {
   user: Pick<User, "name" | "image" | "email">;
@@ -25,15 +26,12 @@ interface UserAccountNavProps extends React.HTMLAttributes<HTMLDivElement> {
 export function UserAccountNav2({ user }: UserAccountNavProps) {
   const [showLogoutAlert, setShowLogoutAlert] = useState<boolean>(false);
   const [isLogoutLoading, setIsLogoutLoading] = useState<boolean>(false);
-
+  const supabase = createClient();
   const handleLogout = async () => {
     setIsLogoutLoading(true);
-    const logout = await signOut({
-      redirect: true,
-      callbackUrl: `${window.location.origin}/sign-in`,
-    });
+    const { error } = await supabase.auth.signOut();
 
-    if (logout) {
+    if (!error) {
       setIsLogoutLoading(false);
       setShowLogoutAlert(false);
     }

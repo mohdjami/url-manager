@@ -3,23 +3,20 @@ import { getCurrentUser } from "@/lib/session";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const user = await getCurrentUser();
+  const { supabase, user } = await getCurrentUser();
   try {
     if (!user?.id) {
       return NextResponse.json("Unauthorized", { status: 401 });
     }
     const { slug } = await req.json();
-    const clickss = await db.url.findUnique({
-      where: {
-        shortUrl: slug,
-      },
-      select: {
-        clicks: true,
-      },
-    });
+    const clicks = await supabase
+      .from("Url")
+      .select("clicks")
+      .eq("shortUrl", slug);
+    console.log(clicks);
     return NextResponse.json(
       {
-        clicks: clickss?.clicks,
+        clicks: clicks,
       },
       {
         status: 200,

@@ -1,29 +1,22 @@
 import db from "@/lib/db";
-import createShortUrl from "@/lib/urls";
+import createShortUrl, { findSlug, urlExists } from "@/lib/urls";
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/session";
 import { redis } from "@/lib/redis";
-import { findSlug, urlExists } from "@/lib/utils";
+
 import { slugSchema } from "@/lib/validations/urls";
 import { z } from "zod";
 import { rateLimiting } from "@/lib/rate-limiting";
 import { createClient } from "@/supabase/server";
 
 export async function POST(req: NextRequest) {
-  const supabase = createClient();
   try {
-    const { data, error } = await supabase.auth.getUser();
-    if (error) {
-      return NextResponse.json({
-        error: "Unauthorized",
-        status: 401,
-      });
-    }
-    const user = data?.user;
+    // console.log("route called");
+    const { supabase, user } = await getCurrentUser();
+    console.log(user.id);
     const ip = req.headers.get("x-forwarded-for") || req.ip;
     await rateLimiting(ip!);
     let { parsedUrl, code } = await req.json();
-
     if (!user) {
       return NextResponse.json(
         {
@@ -48,44 +41,58 @@ export async function POST(req: NextRequest) {
       code = await createShortUrl();
     }
     const parsedCode = slugSchema.parse({ slug: code });
+    console.log(parsedCode);
     await redis.set(parsedCode.slug, parsedUrl, "EX", 60 * 60 * 24 * 7); // expire in one week
-    if (await findSlug(parsedCode.slug))
-      return new Response(null, {
+    const slugExists = await findSlug(parsedCode.slug);
+    const urlExist = await urlExists(user.id, parsedUrl);
+    if (slugExists || urlExist)
+      return NextResponse.json({
+        error: `${slugExists} and ${urlExist}`,
         status: 409,
       });
-    if (await urlExists(parsedUrl, user.id)) {
-      return NextResponse.json(
-        {
-          error: "This URL is already shortened please check your Dashboard",
-        },
-        {
-          status: 409,
-        }
-      );
-    }
-    const Url = await db.url.create({
-      data: {
+    console.log(slugExists, urlExist);
+
+    const { data: Url, error: InsertError } = await supabase
+      .from("Url")
+      .insert({
         originalUrl: parsedUrl,
         shortUrl: parsedCode.slug,
         userId: user.id,
-      },
-    });
-    return NextResponse.json({
-      url: Url,
-      code,
-    });
-  } catch (error) {
-    console.log(error);
-    if (error instanceof z.ZodError) {
+      });
+    if (InsertError) {
+      console.log(InsertError);
       return NextResponse.json(
         {
-          error: error.errors[0].message!,
+          error: "An error occured",
         },
         {
           status: 500,
         }
       );
     }
+    // const Url = await db.url.create({
+    //   data: {
+    //     originalUrl: parsedUrl,
+    //     shortUrl: parsedCode.slug,
+    //     userId: user.id,
+    //   },
+    // });
+    return NextResponse.json({
+      url: Url,
+      code,
+    });
+  } catch (error) {
+    console.log(error);
+    // if (error instanceof z.ZodError) {
+    //   return NextResponse.json(
+    //     {
+    //       error: error.errors[0].message!,
+    //     },
+    //     {
+    //       status: 500,
+    //     }
+    //   );
+    // }
     return NextResponse.json(
       {
         error: "Something went very wrong",

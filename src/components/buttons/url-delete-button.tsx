@@ -13,7 +13,7 @@ interface DeleteButtonProps {
 }
 
 async function deleteActivity(id: string) {
-  const response = await fetch("api/urls/delete", {
+  const response = await fetch("api/v2/urls/delete", {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

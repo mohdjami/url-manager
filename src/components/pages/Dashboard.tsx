@@ -17,7 +17,6 @@ import { AddNewUrl } from "../dialogs/add-new-dialogue";
 import { DeleteButton } from "../buttons/url-delete-button";
 import { Icons } from "../Icons";
 import { CopyCheckIcon, CopyIcon } from "lucide-react";
-import { set } from "zod";
 interface Copy {
   [key: string]: boolean;
 }
@@ -42,7 +41,7 @@ export default function Dashboard() {
     async function searchUrls() {
       try {
         setLoading(true);
-        const res = await fetch("api/urls/search", {
+        const res = await fetch("api/v2/urls/search", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

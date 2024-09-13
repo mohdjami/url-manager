@@ -17,17 +17,14 @@ const GithubSignInButton: FC<GithubSignInButtonProps> = ({ children }) => {
       disabled={isLoading}
       onClick={async () => {
         setLoading(true);
-        const { error, data } = await supabase.auth.signInWithOAuth({
+        const { data, error } = await supabase.auth.signInWithOAuth({
           provider: "github",
           options: {
             redirectTo: `${process.env.NEXT_PUBLIC_URL}/auth/callback`,
           },
         });
-        if (error) {
-          console.log(error);
-        } else {
-          return redirect(data.url);
-        }
+
+        if (data.url) redirect(data.url);
         setLoading(false);
       }}
       className="flex items-center space-x-2 w-full"

@@ -42,7 +42,7 @@ export async function GET(request: Request) {
       }
       // Redirect to the next page
       if (!error) {
-        return NextResponse.redirect(`${origin}${next}`);
+        return NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL}${next}`);
       } else {
         return NextResponse.json({
           error: error,

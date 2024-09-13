@@ -67,7 +67,7 @@ const SignUpForm = () => {
             },
           ]);
         if (userError) {
-          console.error("Error adding user to custom table:", userError);
+          // console.error("Error adding user to custom table:", userError);
           isLoading(false);
           return;
         }

@@ -3,6 +3,7 @@ import { FC, JSX, ReactNode, SVGProps, useState } from "react";
 import { Button } from "../ui/button";
 import { signIn } from "next-auth/react";
 import { createClient } from "@/supabase/client";
+import { redirect } from "next/navigation";
 interface GithubSignInButtonProps {
   children: ReactNode;
 }
@@ -16,12 +17,17 @@ const GithubSignInButton: FC<GithubSignInButtonProps> = ({ children }) => {
       disabled={isLoading}
       onClick={async () => {
         setLoading(true);
-        await supabase.auth.signInWithOAuth({
+        const { error, data } = await supabase.auth.signInWithOAuth({
           provider: "github",
           options: {
             redirectTo: `${process.env.NEXT_PUBLIC_URL}/auth/callback`,
           },
         });
+        if (error) {
+          console.log(error);
+        } else {
+          return redirect(data.url);
+        }
         setLoading(false);
       }}
       className="flex items-center space-x-2 w-full"

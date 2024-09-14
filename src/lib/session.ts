@@ -9,7 +9,7 @@ export async function getCurrentUser() {
     .select("*")
     .eq("email", data.user?.email);
   if (userError || !userData) {
-    console.error("User does not exist in the custom table:", userError);
+    // console.error("User does not exist in the custom table:", userError);
     return { supabase, user: null };
   }
 

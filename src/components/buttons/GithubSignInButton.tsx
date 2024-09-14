@@ -2,7 +2,7 @@
 import { FC, JSX, ReactNode, SVGProps, useState } from "react";
 import { Button } from "../ui/button";
 import { createClient } from "@/supabase/client";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 interface GithubSignInButtonProps {
   children: ReactNode;

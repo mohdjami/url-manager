@@ -2,12 +2,15 @@
 import { FC, JSX, ReactNode, SVGProps, useState } from "react";
 import { Button } from "../ui/button";
 import { createClient } from "@/supabase/client";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/router";
+
 interface GithubSignInButtonProps {
   children: ReactNode;
 }
 
 const GithubSignInButton: FC<GithubSignInButtonProps> = ({ children }) => {
+  const router = useRouter();
+
   const supabase = createClient();
   const [isLoading, setLoading] = useState<boolean>(false);
 
@@ -19,12 +22,18 @@ const GithubSignInButton: FC<GithubSignInButtonProps> = ({ children }) => {
         const { data, error } = await supabase.auth.signInWithOAuth({
           provider: "github",
           options: {
-            redirectTo: `${window.location.origin}/auth/callback`,
+            redirectTo: `${
+              typeof window !== "undefined" ? window.location.origin : ""
+            }/auth/callback`,
           },
         });
 
-        if (data.url) window.location.href = data.url;
-        setLoading(false);
+        if (error) {
+          console.error("Sign in error:", error);
+          setLoading(false);
+        } else if (data?.url) {
+          router.push(data.url);
+        }
       }}
       className="flex items-center space-x-2 w-full"
       variant="outline"

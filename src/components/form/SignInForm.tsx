@@ -37,13 +37,13 @@ const SignInForm = () => {
     },
   });
 
-  const verifyEmail = async (email: string) => {
-    return axios.post(
-      "/api/verified",
-      { email },
-      { headers: { "Content-Type": "application/json" } }
-    );
-  };
+  // const verifyEmail = async (email: string) => {
+  //   return axios.post(
+  //     "/api/verified",
+  //     { email },
+  //     { headers: { "Content-Type": "application/json" } }
+  //   );
+  // };
 
   const handleError = (error: any) => {
     toast({

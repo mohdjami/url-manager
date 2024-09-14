@@ -1,7 +1,6 @@
 "use client";
 import { FC, JSX, ReactNode, SVGProps, useState } from "react";
 import { Button } from "../ui/button";
-import { signIn } from "next-auth/react";
 import { createClient } from "@/supabase/client";
 import { redirect } from "next/navigation";
 interface GithubSignInButtonProps {
@@ -20,11 +19,11 @@ const GithubSignInButton: FC<GithubSignInButtonProps> = ({ children }) => {
         const { data, error } = await supabase.auth.signInWithOAuth({
           provider: "github",
           options: {
-            redirectTo: `${process.env.NEXT_PUBLIC_URL}/auth/callback`,
+            redirectTo: `${window.location.origin}/auth/callback`,
           },
         });
 
-        if (data.url) redirect(data.url);
+        if (data.url) window.location.href = data.url;
         setLoading(false);
       }}
       className="flex items-center space-x-2 w-full"

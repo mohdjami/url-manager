@@ -18,6 +18,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { ForgotPasswordFormSchema } from "@/lib/validations/forms";
 import { Icons } from "../Icons";
 import { useState } from "react";
+import { createClient } from "@/supabase/client";
 
 type FormValues = {
   email: string;
@@ -31,12 +32,12 @@ const ForgotPassword = () => {
 
   const onSubmit = async (values: z.infer<typeof ForgotPasswordFormSchema>) => {
     try {
+      const supabase = createClient();
       setLoading(true);
-      await axios.post("/api/auth/forgot-password", values, {
-        headers: {
-          "Content-Type": "application/json",
-        },
+      await supabase.auth.resetPasswordForEmail(values?.email, {
+        redirectTo: `${process.env.NEXT_PUBLIC_URL}/reset-password`,
       });
+
       toast({
         title: "Success",
         description: "Password reset link has been sent to your mail",

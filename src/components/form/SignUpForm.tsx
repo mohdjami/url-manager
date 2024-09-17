@@ -46,26 +46,30 @@ const SignUpForm = () => {
         password: values.password,
       });
       if (error) {
-        throw error;
-      } else {
+        console.log(error);
       }
-
       isLoading(false);
 
       try {
-        // await axios.post("/api/send-mail", values);
+        const { data: UserExists, error: UserExistsError } = await supabase
+          .from("User")
+          .select("*")
+          .eq("email", values.email)
+          .single();
+        if (UserExists) {
+          isLoading(false);
+          router.push("/sign-in");
+          return;
+        }
         const { data: userData, error: userError } = await supabase
           .from("User")
-          .insert([
-            {
-              id: authData.user?.id, // Use the user ID from the authentication data
-              email: values.email,
-              createdAt: new Date().toISOString(),
-              username: values.username,
-              password: values.password,
-              // Add other fields as necessary
-            },
-          ]);
+          .insert({
+            id: authData.user?.id, // Use the user ID from the authentication data
+            email: values.email,
+            createdAt: new Date().toISOString(),
+            username: values.username,
+            // Add other fields as necessary
+          });
         if (userError) {
           // console.error("Error adding user to custom table:", userError);
           isLoading(false);

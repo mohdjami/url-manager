@@ -37,14 +37,6 @@ const SignInForm = () => {
     },
   });
 
-  // const verifyEmail = async (email: string) => {
-  //   return axios.post(
-  //     "/api/verified",
-  //     { email },
-  //     { headers: { "Content-Type": "application/json" } }
-  //   );
-  // };
-
   const handleError = (error: any) => {
     toast({
       title: "Error",
@@ -71,6 +63,18 @@ const SignInForm = () => {
           email: values.email,
           password: values.password,
         });
+      if (data && authError) {
+        //if user is available but it is not in the auth table
+        //then we need to create a new user in the auth table
+        //but we need to check the password before creating a new user in the auth table
+
+        const { data: authData, error: authError } = await supabase.auth.signUp(
+          {
+            email: values.email,
+            password: values.password,
+          }
+        );
+      }
       if (authError) {
         toast({
           title: "Either email or password is wrong",
@@ -78,6 +82,11 @@ const SignInForm = () => {
             "Please sign up if you are not a user or click on forgot password t reset your password",
           variant: "destructive",
         });
+        const { data: authData, error: authError } =
+          await supabase.auth.signInWithPassword({
+            email: values.email,
+            password: values.password,
+          });
         setLoading(false);
         router.push("/error");
       } else {

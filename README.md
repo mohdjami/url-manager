@@ -1,6 +1,6 @@
-URL Shortener with Next.js and Additional Features
+URL Manager with Next.js and Additional Features
 
-This is a URL shortener application built with the Next.js stack (Next.js , Prisma, Supabase, Kafka, Redis, Nextauth, Tailwind) offering advanced functionalities beyond basic URL shortening.
+This is a URL Manager application built with the Next.js stack (Next.js , Prisma, Supabase, Kafka, Redis, Nextauth, Tailwind) offering advanced functionalities beyond basic URL shortening.
 
 Core Features:
 

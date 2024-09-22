@@ -20,7 +20,8 @@ export async function POST(req: Request) {
       .from("Url")
       .select("*")
       .eq("userId", user.id)
-      .ilike("originalUrl", `%${search}%`);
+      .ilike("originalUrl", `%${search}%`)
+      .order("createdAt", { ascending: false });
     // .eq("userId", user.id);
     // const urls = await db.url.findMany({
     //   where: {

@@ -5,10 +5,7 @@ export default async function Home() {
   return (
     <main>
       <div>
-        <title>
-          V2 URL Manager I am revamping this project with Supabase. Please wait
-          for version 2.
-        </title>
+        <title>V2 URL Manager</title>
         <meta name="description" content="Home page" />
       </div>
       <Hero />

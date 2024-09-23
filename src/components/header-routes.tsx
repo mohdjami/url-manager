@@ -58,7 +58,7 @@ const HeaderRoutes = async () => {
             <HandMetal className=" md:block hidden text-[#ffffff] dark:text-black" />
           </Link>{" "}
           <span className="ml-2 text-lg font-bold text-[#ffffff] dark:text-black">
-            URL Shortener
+            URL Manager
           </span>
         </Link>
       </div>

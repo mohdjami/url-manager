@@ -49,7 +49,7 @@ const Features = () => {
             Reliablility
           </div>
           <p className="mx-auto max-w-[700px]  text-left text-gray-500 md:text-xl/relaxed dark:text-gray-400">
-            URL Shortener is built on top of a global network of data centers so
+            URL Manager is built on top of a global network of data centers so
             that you can rely on its performance, wherever your users are.
           </p>
         </div>
@@ -58,7 +58,7 @@ const Features = () => {
             Blazing Fast
           </div>
           <p className="mx-auto max-w-[700px] text-left text-gray-500 md:text-xl/relaxed dark:text-gray-400">
-            URL Shortener is blazing fast, as it uses cache system to store the
+            URL Manager is blazing fast, as it uses cache system to store the
             frequentl accessed urls and serve them faster. Our URLs are
             generated in less than 1ms.
           </p>

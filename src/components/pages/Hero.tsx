@@ -76,7 +76,7 @@ export default function Hero() {
                 <div className="py-5">
                   <div className="py-3">
                     <h1 className="text-3xl font-bold tracking-tighter text-left sm:text-4xl md:text-5xl lg:text-6xl/none">
-                      URL Shortener
+                      URL Manager
                     </h1>
                   </div>
                   <div className="py-6 text-left font-medium">

@@ -71,13 +71,7 @@ export async function POST(req: NextRequest) {
         }
       );
     }
-    // const Url = await db.url.create({
-    //   data: {
-    //     originalUrl: parsedUrl,
-    //     shortUrl: parsedCode.slug,
-    //     userId: user.id,
-    //   },
-    // });
+
     revalidatePath("/dashboard");
     return NextResponse.json({
       url: Url,
@@ -85,16 +79,16 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.log(error);
-    // if (error instanceof z.ZodError) {
-    //   return NextResponse.json(
-    //     {
-    //       error: error.errors[0].message!,
-    //     },
-    //     {
-    //       status: 500,
-    //     }
-    //   );
-    // }
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        {
+          error: error.errors[0].message!,
+        },
+        {
+          status: 500,
+        }
+      );
+    }
     return NextResponse.json(
       {
         error: "Something went very wrong",

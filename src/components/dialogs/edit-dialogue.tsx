@@ -17,7 +17,7 @@ import { Icons } from "../Icons";
 interface Props {
   id: string;
 }
-export function DialogDemo({ id }: Props) {
+export function UpdateUrl({ id }: Props) {
   const [shortUrl, setShortUrl] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();

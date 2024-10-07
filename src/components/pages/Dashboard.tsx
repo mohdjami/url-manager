@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
 import { useToast } from "../ui/use-toast";
-import { DialogDemo } from "../dialogs/edit-dialogue";
+import { UpdateUrl } from "../dialogs/edit-dialogue";
 import { AddNewUrl } from "../dialogs/add-new-dialogue";
 import { DeleteButton } from "../buttons/url-delete-button";
 import { Icons } from "../Icons";
@@ -151,7 +151,7 @@ export default function Dashboard() {
                     <TableCell>{`${url.clicks}`}</TableCell>
                     <TableCell className="flex justify-end gap-2">
                       <Button size="icon" variant="ghost">
-                        <DialogDemo id={url.id} />
+                        <UpdateUrl id={url.id} />
                         <span className="sr-only">Edit</span>
                       </Button>
                       <DeleteButton id={url.id} />

@@ -1,10 +1,10 @@
 import { SiteConfig } from "@/types";
 
 export const siteConfig: SiteConfig = {
-  name: "Url-shortener",
+  name: "Url-manager",
   author: "mohdjami",
   description:
-    "Shorten your long urls with fast and reliable url shortening service.",
+    "Monitor your URLs, shorten your long urls with fast and reliable url managing service.",
   keywords: [
     "Next.js",
     "React",

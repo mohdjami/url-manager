@@ -8,6 +8,7 @@ import { slugSchema } from "@/lib/validations/urls";
 import { z } from "zod";
 import { rateLimiting } from "@/lib/rate-limiting";
 import { createClient } from "@/supabase/server";
+import { revalidatePath } from "next/cache";
 
 export async function POST(req: NextRequest) {
   try {
@@ -77,6 +78,7 @@ export async function POST(req: NextRequest) {
     //     userId: user.id,
     //   },
     // });
+    revalidatePath("/dashboard");
     return NextResponse.json({
       url: Url,
       code,

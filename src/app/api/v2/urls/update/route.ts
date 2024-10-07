@@ -19,18 +19,18 @@ export async function POST(req: NextRequest) {
       });
     const { id, shortUrl } = await req.json();
     const parsedCode = slugSchema.parse({ slug: shortUrl });
-
+    console.log(id, parsedCode);
     if (!parsedCode) {
       return NextResponse.json(
         { message: "Missing parameter" },
-        { status: 400 }
+        { status: 404 }
       );
     }
     const slugExists = await findSlug(parsedCode.slug);
     if (slugExists) {
       return NextResponse.json(
         { message: "Slug already exists" },
-        { status: 400 }
+        { status: 409 }
       );
     }
     const { data: urlExists, error: urlExistError } = await supabase
@@ -38,14 +38,22 @@ export async function POST(req: NextRequest) {
       .select("*")
       .eq("id", id)
       .single();
-
     await redis.del(urlExists?.shortUrl!);
     await redis.set(parsedCode.slug, urlExists.originalUrl!);
-    await supabase.from("Url").update({
-      originalUrl: urlExists?.originalUrl! || urlExists?.originalUrl,
-      shortUrl: parsedCode.slug || urlExists?.shortUrl,
-      updatedAt: new Date(Date.now()),
-    });
+    const { error } = await supabase
+      .from("Url")
+      .update({
+        shortUrl: parsedCode.slug,
+        updatedAt: new Date().toISOString(),
+      })
+      .eq("id", id);
+    if (error) {
+      console.log("error updating url", error);
+      return NextResponse.json(
+        { message: "Error Updating the URL" },
+        { status: 400 }
+      );
+    }
     // await db.url.updateMany({
     //   where: {
     //     id,

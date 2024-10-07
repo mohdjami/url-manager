@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
     const slug = req.url.split("/").pop();
     const ip = req.headers.get("x-forwarded-for") || req.ip;
     // await rateLimiting(ip!);
-    // const cachedUrl = await redis.get(slug!);
+    const cachedUrl = await redis.get(slug!);
     console.log("route called");
     if (!slug) {
       return NextResponse.json(
@@ -24,14 +24,14 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // if (cachedUrl) {
-    //   await updateClicks(slug, req);
-    //   return NextResponse.redirect(cachedUrl || "/", {
-    //     headers: {
-    //       "Cache-Control": "public, max-age=31536000, immutable",
-    //     },
-    //   });
-    // }
+    if (cachedUrl) {
+      await updateClicks(slug, req);
+      return NextResponse.redirect(cachedUrl || "/", {
+        headers: {
+          "Cache-Control": "public, max-age=31536000, immutable",
+        },
+      });
+    }
     const { data: url, error: urlError } = await supabase
       .from("Url")
       .select("originalUrl")

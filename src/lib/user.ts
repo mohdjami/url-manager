@@ -28,6 +28,7 @@ export async function createUser(id: string, email: string) {
       id, // Use the user ID from the authentication data
       email,
       createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       // Add other fields as necessary
     },
   ]);

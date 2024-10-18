@@ -95,7 +95,7 @@ export function AddNewUrl() {
             <Input
               id="code"
               className="col-span-3"
-              defaultValue="Slug for your url"
+              placeholder="Slug || custom"
               onChange={(e) => setCode(e.target.value)}
             />
           </div>

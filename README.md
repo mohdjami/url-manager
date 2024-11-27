@@ -1,5 +1,7 @@
 URL Manager with Next.js and Additional Features
 
+Roadpmap.sh Project URL - https://roadmap.sh/projects/url-shortening-service
+
 This is a URL Manager application built with the Next.js stack (Next.js , Prisma, Supabase, Kafka, Redis, Nextauth, Tailwind) offering advanced functionalities beyond basic URL shortening.
 
 Core Features:

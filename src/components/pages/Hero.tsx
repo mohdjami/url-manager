@@ -67,112 +67,110 @@ export default function Hero() {
   };
 
   return (
-    <div className="container flex flex-col py-4">
-      <main className="flex-1">
-        <section className="w-full py-8 md:py-24 lg:py-32 xl:py-40">
-          <div className="container px-4 md:px-6">
-            <div className="grid gap-4  sm:grid-cols-2 items-center space-y-4 text-center">
-              <div className="space-y-2">
-                <div className="py-5">
-                  <div className="py-3">
-                    <h1 className="text-3xl font-bold tracking-tighter text-left sm:text-4xl md:text-5xl lg:text-6xl/none">
-                      URL Manager
-                    </h1>
-                  </div>
-                  <div className="py-6 text-left font-medium">
-                    <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                      The essential tool for Creating and Sharing custom short
-                      links, measure traffic, and grow your audience.
-                    </p>
-                    <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                      Enter your URL to shorten it and share it with the world.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="space-y-2 min-w-[300px]">
-                <Card className="py-3 px-5">
-                  <CardTitle className="py-3 px-5">
-                    <form className="flex space-x-2">
-                      <div className="flex flex-row justify-between">
-                        <p className="mx-auto max-w-[700px] text-black md:text-xl dark:text-white">
-                          {`${process.env.NEXT_PUBLIC_URL}/up/`}
-                        </p>
-                        &nbsp;
-                        <Input
-                          className="max-w-lg flex-1"
-                          placeholder="Custom"
-                          type="name"
-                          onChange={(e) => {
-                            setCode(e.target.value);
-                          }}
-                        />
-                      </div>
-                    </form>
-                  </CardTitle>
-                  <CardDescription className="py-3">
-                    <form className="flex space-x-2" onSubmit={handleSubmit}>
-                      <Input
-                        className="max-w-lg flex-1"
-                        placeholder={
-                          displayCode || success
-                            ? "Enter your URL"
-                            : "Enter your URL"
-                        }
-                        type="url"
-                        onChange={(e) => {
-                          setUrl(e.target.value);
-                        }}
-                      />
-                      <Button type="submit" onClick={handleSubmit}>
-                        {loading ? (
-                          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                        ) : (
-                          "Shorten"
-                        )}
-                      </Button>
-                    </form>
-                  </CardDescription>
-                </Card>{" "}
-                <Card>
-                  <CardDescription>
-                    <CardTitle className="p-5">
-                      {displayCode || success ? (
-                        <Link
-                          className="flex justify-between items-center mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400"
-                          href={`${process.env.NEXT_PUBLIC_URL}/up/${displayCode}`}
-                        >
-                          {`${process.env.NEXT_PUBLIC_URL}/up/${displayCode}`}
-                          <Button
-                            onClick={() => {
-                              setCopy(true);
-                              navigator.clipboard.writeText(
-                                `${process.env.NEXT_PUBLIC_URL}/up/${displayCode}`
-                              );
-                              setTimeout(() => {
-                                setCopy(false);
-                              }, 2000);
-                            }}
-                          >
-                            {copy ? <CopyCheckIcon /> : <CopyIcon />}
-                          </Button>
-                        </Link>
-                      ) : (
-                        <CardContent>
-                          <p>Create a URL</p>
-                        </CardContent>
-                      )}
-                    </CardTitle>
-                  </CardDescription>
-                </Card>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 min-h-screen flex flex-col justify-center">
+      <main className="flex-1 w-full max-w-6xl mx-auto">
+        <section className="py-12 md:py-20 lg:py-24">
+          <div className="grid gap-8 lg:gap-12 lg:grid-cols-2 items-center">
+            {/* Left Column - Text Content */}
+            <div className="space-y-6 text-center lg:text-left">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
+                URL Manager
+              </h1>
+              <div className="space-y-4">
+                <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400">
+                  The essential tool for Creating and Sharing custom short links,
+                  measure traffic, and grow your audience.
+                </p>
+                <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400">
+                  Enter your URL to shorten it and share it with the world.
+                </p>
               </div>
               <Link
                 href={siteConfig.links.github}
-                className="rounded-2xl px-4 py-1.5 text-sm bg-black text-white font-medium dark:bg-muted  dark:text-white"
+                className="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition-colors bg-black text-white hover:bg-gray-900 dark:bg-gray-800 dark:hover:bg-gray-700"
                 target="_blank"
               >
-                Feel Free to View Codebase On my Github
+                View Codebase On Github
               </Link>
+            </div>
+
+            {/* Right Column - URL Shortener */}
+            <div className="space-y-4 w-full max-w-md mx-auto lg:mx-0">
+              <Card className="shadow-lg transition-shadow duration-200 hover:shadow-xl">
+                <CardTitle className="p-6 border-b">
+                  <form className="flex items-center space-x-2">
+                    <span className="text-sm md:text-base font-medium whitespace-nowrap text-gray-700 dark:text-gray-300">
+                      {`${process.env.NEXT_PUBLIC_URL}/up/`}
+                    </span>
+                    <Input
+                      className="flex-1 h-10"
+                      placeholder="Custom"
+                      type="name"
+                      onChange={(e) => setCode(e.target.value)}
+                    />
+                  </form>
+                </CardTitle>
+                <CardDescription className="p-6">
+                  <form className="flex space-x-2" onSubmit={handleSubmit}>
+                    <Input
+                      className="flex-1 h-10"
+                      placeholder="Enter your URL"
+                      type="url"
+                      onChange={(e) => setUrl(e.target.value)}
+                    />
+                    <Button 
+                      type="submit"
+                      className="h-10 px-6 transition-all duration-200 hover:scale-105"
+                      onClick={handleSubmit}
+                    >
+                      {loading ? (
+                        <Icons.spinner className="h-4 w-4 animate-spin" />
+                      ) : (
+                        "Shorten"
+                      )}
+                    </Button>
+                  </form>
+                </CardDescription>
+              </Card>
+
+              <Card className="shadow-md transition-all duration-200 hover:shadow-lg">
+                <CardDescription>
+                  <CardTitle className="p-6">
+                    {displayCode || success ? (
+                      <div className="flex items-center justify-between gap-4">
+                        <Link
+                          className="text-gray-500 dark:text-gray-400 text-sm md:text-base font-medium truncate hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+                          href={`${process.env.NEXT_PUBLIC_URL}/up/${displayCode}`}
+                        >
+                          {`${process.env.NEXT_PUBLIC_URL}/up/${displayCode}`}
+                        </Link>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-9 w-9 p-0 hover:scale-110 transition-transform"
+                          onClick={() => {
+                            setCopy(true);
+                            navigator.clipboard.writeText(
+                              `${process.env.NEXT_PUBLIC_URL}/up/${displayCode}`
+                            );
+                            setTimeout(() => setCopy(false), 2000);
+                          }}
+                        >
+                          {copy ? (
+                            <CopyCheckIcon className="h-4 w-4 text-green-500" />
+                          ) : (
+                            <CopyIcon className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </div>
+                    ) : (
+                      <CardContent className="p-0 text-center text-gray-500 dark:text-gray-400">
+                        Create a URL
+                      </CardContent>
+                    )}
+                  </CardTitle>
+                </CardDescription>
+              </Card>
             </div>
           </div>
         </section>

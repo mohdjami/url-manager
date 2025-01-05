@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
   try {
     const slug = req.url.split("/").pop();
     const ip = req.headers.get("x-forwarded-for") || req.ip;
-    // await rateLimiting(ip!);
+    await rateLimiting(ip!);
     const cachedUrl = await redis.get(slug!);
     console.log("route called");
     if (!slug) {

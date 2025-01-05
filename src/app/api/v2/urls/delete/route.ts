@@ -1,4 +1,3 @@
-import db from "@/lib/db";
 import { NextResponse, NextRequest } from "next/server";
 import { redis } from "@/lib/redis";
 import { getCurrentUser } from "@/lib/session";

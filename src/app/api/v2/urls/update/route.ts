@@ -1,12 +1,10 @@
-import db from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
 import { NextRequest, NextResponse } from "next/server";
 import { redis } from "@/lib/redis";
 import { slugSchema } from "@/lib/validations/urls";
 import { z } from "zod";
-import { UrlExistsResult } from "@/types";
 import { rateLimiting } from "@/lib/rate-limiting";
-import { findSlug, urlExists } from "@/lib/urls";
+import { findSlug } from "@/lib/urls";
 import { revalidatePath } from "next/cache"
 
 

@@ -13,7 +13,7 @@ export default function createShortUrl(): any {
 export const updateClicks = async (slug: string, req: NextRequest) => {
   const ip = req.headers.get("x-forwarded-for") || req.ip;
   const supabase = createClient();
-  const { data: clicks, error } = await supabase
+  const { data, error } = await supabase
     .from("url")
     .select("clicks")
     .eq("shortUrl", slug)
@@ -24,7 +24,7 @@ export const updateClicks = async (slug: string, req: NextRequest) => {
     return;
   }
 
-  const updatedClicks = clicks + 1;
+  const updatedClicks = data.clicks + 1;
   
   const { data: updateData, error: updateError } = await supabase
     .from("url")

@@ -4,6 +4,7 @@ import { redis } from "@/lib/redis";
 import { updateClicks } from "@/lib/urls";
 import { createClient } from "@/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache"
 
 export async function GET(req: NextRequest) {
   const supabase = createClient();
@@ -61,6 +62,7 @@ export async function GET(req: NextRequest) {
     // });
 
     await updateClicks(slug, req);
+    revalidatePath('/')
     await redis.set(slug, url.originalUrl);
     return NextResponse.redirect(url.originalUrl || "/", {
       headers: {

@@ -7,8 +7,11 @@ import { z } from "zod";
 import { UrlExistsResult } from "@/types";
 import { rateLimiting } from "@/lib/rate-limiting";
 import { findSlug, urlExists } from "@/lib/urls";
+import { revalidatePath } from "next/cache"
+
 
 export async function POST(req: NextRequest) {
+  const path = request.nextUrl.searchParams.get('path')
   try {
     const { supabase, user } = await getCurrentUser();
     const ip = req.headers.get("x-forwarded-for") || req.ip;
@@ -65,6 +68,7 @@ export async function POST(req: NextRequest) {
     //     updatedAt: new Date(Date.now()),
     //   },
     // });
+    revalidatePath(path);
     return NextResponse.json(
       {
         message: "Url updated",

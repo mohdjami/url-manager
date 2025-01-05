@@ -13,7 +13,7 @@ export default function createShortUrl(): any {
 export const updateClicks = async (slug: string, req: NextRequest) => {
   const ip = req.headers.get("x-forwarded-for") || req.ip;
   const supabase = createClient();
-  const { data, error } = await supabase
+  const { data: clicks, error } = await supabase
     .from("url")
     .select("clicks")
     .eq("shortUrl", slug)
@@ -24,11 +24,11 @@ export const updateClicks = async (slug: string, req: NextRequest) => {
     return;
   }
 
-  const currentClicks = data.clicks;
-
+  const updatedClicks = clicks + 1;
+  
   const { data: updateData, error: updateError } = await supabase
     .from("url")
-    .update({ clicks: currentClicks + 1 })
+    .update({ clicks: updatedClicks })
     .eq("shortUrl", slug)
     .select("clicks")
     .single();
@@ -38,7 +38,6 @@ export const updateClicks = async (slug: string, req: NextRequest) => {
     return;
   }
 
-  const updatedClicks = updateData.clicks;
   // const clicks = await db.url.update({
   //   where: {
   //     shortUrl: slug,
@@ -70,7 +69,7 @@ export const updateClicks = async (slug: string, req: NextRequest) => {
   //   },
   // });
 
-  return updateClicks;
+  return updatedClicks;
 };
 
 export const findSlug = async (slug: string) => {

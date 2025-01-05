@@ -5,7 +5,7 @@ import { getCurrentUser } from "@/lib/session";
 import { revalidatePath } from "next/cache"
 
 export async function DELETE(req: Request) {
-  const path = request.nextUrl.searchParams.get('path')
+  const path = req.nextUrl.searchParams.get('path')
 
   try {
     const { id } = await req.json();

@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache"
 
 export async function GET(req: NextRequest) {
-  const path = request.nextUrl.searchParams.get('path')
+  const path = req.nextUrl.searchParams.get('path')
   const supabase = createClient();
   try {
     const slug = req.url.split("/").pop();

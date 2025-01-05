@@ -11,7 +11,7 @@ import { revalidatePath } from "next/cache"
 
 
 export async function POST(req: NextRequest) {
-  const path = request.nextUrl.searchParams.get('path')
+  const path = req.nextUrl.searchParams.get('path')
   try {
     const { supabase, user } = await getCurrentUser();
     const ip = req.headers.get("x-forwarded-for") || req.ip;

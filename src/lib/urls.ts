@@ -70,7 +70,7 @@ export const updateClicks = async (slug: string, req: NextRequest) => {
   //     ipAddress: ip,
   //   },
   // });
-  revalidatePath('/');
+  revalidatePath('/dashboard');
   return updatedClicks;
 };
 

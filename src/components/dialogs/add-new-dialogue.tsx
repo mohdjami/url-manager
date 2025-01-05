@@ -107,7 +107,7 @@ export function AddNewUrl() {
             ) : (
               <div className="flex space-x-3">
                 <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                "Create"
+                Create
               </div>
             )}{" "}
           </Button>

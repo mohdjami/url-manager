@@ -1,11 +1,11 @@
 import db from "@/lib/db";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { redis } from "@/lib/redis";
 import { getCurrentUser } from "@/lib/session";
 import { revalidatePath } from "next/cache"
 
-export async function DELETE(req: Request) {
-  const path = req.nextUrl.searchParams.get('path')
+export async function DELETE(req: NextRequest) {
+  const path = req.nextUrl.searchParams.get('path');
 
   try {
     const { id } = await req.json();
@@ -34,7 +34,7 @@ export async function DELETE(req: Request) {
     await redis.del(url?.shortUrl);
     await supabase.from("Url").delete().eq("id", id);
     await supabase.from("urlClick").delete().eq("urlId", id);
-    revalidatePath(path)
+    revalidatePath(path!)
     return NextResponse.json(
       {
         message: "Url deleted",

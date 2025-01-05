@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
     //     updatedAt: new Date(Date.now()),
     //   },
     // });
-    revalidatePath(path);
+    revalidatePath(path!);
     return NextResponse.json(
       {
         message: "Url updated",

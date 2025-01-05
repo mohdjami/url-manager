@@ -1,5 +1,7 @@
 import { createClient } from "@/supabase/server";
 import { NextRequest } from "next/server";
+import { revalidatePath } from "next/cache"
+
 
 export default function createShortUrl(): any {
   const code = "qwertyuioplkjhgfdsazxcvbnm";
@@ -68,7 +70,7 @@ export const updateClicks = async (slug: string, req: NextRequest) => {
   //     ipAddress: ip,
   //   },
   // });
-
+  revalidatePath('/');
   return updatedClicks;
 };
 

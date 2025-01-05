@@ -14,7 +14,7 @@ export const updateClicks = async (slug: string, req: NextRequest) => {
   const ip = req.headers.get("x-forwarded-for") || req.ip;
   const supabase = createClient();
   const { data, error } = await supabase
-    .from("url")
+    .from("Url")
     .select("clicks")
     .eq("shortUrl", slug)
     .single();
@@ -27,7 +27,7 @@ export const updateClicks = async (slug: string, req: NextRequest) => {
   const updatedClicks = data.clicks + 1;
   
   const { data: updateData, error: updateError } = await supabase
-    .from("url")
+    .from("Url")
     .update({ clicks: updatedClicks })
     .eq("shortUrl", slug)
     .select("clicks")

@@ -37,7 +37,6 @@ const ForgotPassword = () => {
       await supabase.auth.resetPasswordForEmail(values?.email, {
         redirectTo: `${process.env.NEXT_PUBLIC_URL}/reset-password`,
       });
-
       toast({
         title: "Success",
         description: "Password reset link has been sent to your mail",

@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -11,164 +12,218 @@ import {
   Table,
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
-import { useToast } from "../ui/use-toast";
-import { UpdateUrl } from "../dialogs/edit-dialogue";
-import { AddNewUrl } from "../dialogs/add-new-dialogue";
-import { DeleteButton } from "../buttons/url-delete-button";
-import { Icons } from "../Icons";
-import { CopyCheckIcon, CopyIcon } from "lucide-react";
-interface Copy {
+import { useToast } from "@/components/ui/use-toast";
+import { UpdateUrl } from "@/components/dialogs/edit-dialogue";
+import { AddNewUrl } from "@/components/dialogs/add-new-dialogue";
+import { DeleteButton } from "@/components/buttons/url-delete-button";
+import { Icons } from "@/components/Icons";
+import { CopyCheckIcon, CopyIcon, ExternalLinkIcon } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+interface UrlData {
+  id: string;
+  shortUrl: string;
+  originalUrl: string;
+  clicks: number;
+}
+
+interface CopyStatus {
   [key: string]: boolean;
 }
+
 export default function Dashboard() {
-  const [urls, setUrls] = useState([]);
-  const [copy, setCopy] = useState<boolean>(false);
-  const [copyStatus, setCopyStatus] = useState<Copy>({
-    "": false,
-  });
-  const handleCopy = (slug: string) => {
-    navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_URL}/up/${slug}`);
-    setCopyStatus((prevStatus) => ({ ...prevStatus, [slug]: true }));
-    setTimeout(() => {
-      setCopyStatus((prevStatus) => ({ ...prevStatus, [slug]: false }));
-    }, 2000);
-  };
-  const [loading, setLoading] = useState(false);
+  const [urls, setUrls] = useState<UrlData[]>([]);
+  const [copyStatus, setCopyStatus] = useState<CopyStatus>({});
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const { toast } = useToast();
 
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopyStatus((prevStatus) => ({ ...prevStatus, [text]: true }));
+    toast({
+      title: "Copied to clipboard",
+      description: "The URL has been copied to your clipboard.",
+    });
+    setTimeout(() => {
+      setCopyStatus((prevStatus) => ({ ...prevStatus, [text]: false }));
+    }, 2000);
+  };
+
   useEffect(() => {
-    async function searchUrls() {
+    const searchUrls = async () => {
       try {
         setLoading(true);
-        const res = await fetch("api/v2/urls/search", {
+        const res = await fetch("/api/v2/urls/search", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ search: search }),
+          body: JSON.stringify({ search }),
         });
+        if (!res.ok) throw new Error("Failed to fetch URLs");
         const data = await res.json();
-        data.urls ? setUrls(data.urls) : setUrls([]);
-        setLoading(false);
+        setUrls(data.urls || []);
       } catch (error) {
+        console.error("Error fetching URLs:", error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch URLs. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
         setLoading(false);
       }
-    }
-    searchUrls();
-  }, [search]);
+    };
+
+    const debounce = setTimeout(searchUrls, 300);
+    return () => clearTimeout(debounce);
+  }, [search, toast]);
+
+  const renderUrlCell = (url: string, isShortUrl: boolean = false) => (
+    <div className="flex items-center gap-2">
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Link
+              href={
+                isShortUrl ? `${process.env.NEXT_PUBLIC_URL}/up/${url}` : url
+              }
+              className="truncate hover:underline text-primary max-w-[150px] sm:max-w-[200px] md:max-w-[300px] lg:max-w-[400px]"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {isShortUrl ? `${process.env.NEXT_PUBLIC_URL}/up/${url}` : url}
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>
+              {isShortUrl ? `${process.env.NEXT_PUBLIC_URL}/up/${url}` : url}
+            </p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() =>
+          handleCopy(
+            isShortUrl ? `${process.env.NEXT_PUBLIC_URL}/up/${url}` : url
+          )
+        }
+      >
+        {copyStatus[url] ? (
+          <CopyCheckIcon className="h-4 w-4" />
+        ) : (
+          <CopyIcon className="h-4 w-4" />
+        )}
+      </Button>
+      <Button variant="ghost" size="icon" asChild>
+        <Link
+          href={isShortUrl ? `${process.env.NEXT_PUBLIC_URL}/up/${url}` : url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <ExternalLinkIcon className="h-4 w-4" />
+        </Link>
+      </Button>
+    </div>
+  );
 
   return (
-    <div className=" flex flex-col w-full py-12 min-h-screen">
-      <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-bold">Links</h1>
-          <p className="text-gray-500 dark:text-gray-400">
-            Here are the links you&apos;ve created. Share them with the world
-            and track their performance.
-          </p>
-        </div>
-        <div className="flex items-center gap-4 mt-8">
-          <div className="flex-1">
-            <Input
-              placeholder="Search links..."
-              onChange={(e) => {
-                setSearch(e.target.value);
-              }}
-            />
-          </div>
-          <AddNewUrl />
-        </div>
-        <div className="w-full overflow-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-1/3">Link</TableHead>
-                <TableHead className="w-1/3">Original</TableHead>
-                <TableHead className="w-1/6">Clicks</TableHead>
-                <TableHead className="w-1/6 text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loading ? (
-                <div className="flex justify-center items-center mt-10 text-xl md:text-xl dark:text-gray-400">
-                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                </div>
-              ) : urls.length > 0 ? (
-                urls.map((url: any) => (
-                  <TableRow className="divide-y rounded-lg" key={url.id}>
-                    <TableCell
-                      className="font-semibold flex gap-2"
-                      typeof="url"
-                    >
-                      {" "}
-                      <div className="flex items-start gap-2">
-                        <Link
-                          className="flex  items-center gap-2"
-                          href={`${process.env.NEXT_PUBLIC_URL}/up/${url.shortUrl}`}
-                        >
-                          {`${process.env.NEXT_PUBLIC_URL}/up/${url.shortUrl}`}
-                        </Link>
-                        <Button
-                          className=" ml-4 h-8 w-8"
-                          key={url.shortUrl}
-                          onClick={() => {
-                            handleCopy(url.shortUrl);
-                          }}
-                          size="icon"
-                        >
-                          {copyStatus[url.shortUrl] ? (
-                            <CopyCheckIcon className="h-4 w-4" />
-                          ) : (
-                            <CopyIcon className="h-4 w-4" />
-                          )}
-                        </Button>
-                      </div>
-                    </TableCell>
-
-                    <TableCell className="text-gray-500">
-                      <span className="sr-only">Original URL:</span>
-                      <div className="flex items-start gap-2">
-                        <Link className="w-[300px]" href={`${url.originalUrl}`}>
-                          {`${url.originalUrl}`}
-                        </Link>
-                        <Button
-                          className=" ml-4 h-8 w-8"
-                          key={url.originalUrl}
-                          onClick={() => {
-                            handleCopy(url.originalUrl);
-                          }}
-                          size="icon"
-                        >
-                          {copyStatus[url.originalUrl] ? (
-                            <CopyCheckIcon className="h-4 w-4" />
-                          ) : (
-                            <CopyIcon className="h-4 w-4" />
-                          )}
-                        </Button>
-                      </div>
-                    </TableCell>
-                    <TableCell>{`${url.clicks}`}</TableCell>
-                    <TableCell className="flex justify-end gap-2">
-                      <Button size="icon" variant="ghost">
-                        <UpdateUrl id={url.id} />
-                        <span className="sr-only">Edit</span>
-                      </Button>
-                      <DeleteButton id={url.id} />
-                    </TableCell>
+    <div className="flex flex-col w-full py-6 md:py-12 min-h-screen mt-20 md:mt-10">
+      <Card className="mx-auto w-full max-w-7xl">
+        <CardHeader>
+          <CardTitle className="text-2xl md:text-3xl font-bold">
+            Links Dashboard
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col gap-6">
+            <p className="text-muted-foreground">
+              Manage and track your shortened links. Share them with the world
+              and monitor their performance.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <div className="w-full sm:flex-1">
+                <Input
+                  placeholder="Search links..."
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full"
+                />
+              </div>
+              <AddNewUrl />
+            </div>
+            <div className="w-full overflow-x-auto rounded-lg border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[30%]">Shortened Link</TableHead>
+                    <TableHead className="w-[40%]">Original URL</TableHead>
+                    <TableHead className="w-[10%] text-center">
+                      Clicks
+                    </TableHead>
+                    <TableHead className="w-[20%] text-right">
+                      Actions
+                    </TableHead>
                   </TableRow>
-                ))
-              ) : (
-                <TableCell className="font-semibold">
-                  <Link href="/dashboard">
-                    Knock! Knock! Lets create a URL right?
-                  </Link>
-                </TableCell>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-      </main>
+                </TableHeader>
+                <TableBody>
+                  {loading ? (
+                    Array.from({ length: 3 }).map((_, index) => (
+                      <TableRow key={index}>
+                        <TableCell>
+                          <Skeleton className="h-6 w-full" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-6 w-full" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-6 w-16 mx-auto" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-6 w-20 ml-auto" />
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : urls.length > 0 ? (
+                    urls.map((url) => (
+                      <TableRow key={url.id}>
+                        <TableCell>
+                          {renderUrlCell(url.shortUrl, true)}
+                        </TableCell>
+                        <TableCell>{renderUrlCell(url.originalUrl)}</TableCell>
+                        <TableCell className="text-center">
+                          {url.clicks}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex justify-end gap-2">
+                            <UpdateUrl id={url.id} />
+                            <DeleteButton id={url.id} />
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={4} className="h-24 text-center">
+                        No links found. Create your first shortened URL!
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

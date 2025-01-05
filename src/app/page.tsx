@@ -5,7 +5,7 @@ export default async function Home() {
   return (
     <main>
       <div>
-        <title>V2 URL Manager</title>
+        <title>URL Manager</title>
         <meta name="description" content="Home page" />
       </div>
       <Hero />

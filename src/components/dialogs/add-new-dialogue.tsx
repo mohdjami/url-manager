@@ -105,7 +105,10 @@ export function AddNewUrl() {
             {loading ? (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             ) : (
-              "Create"
+              <div className="flex space-x-3">
+                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                "Create"
+              </div>
             )}{" "}
           </Button>
         </DialogFooter>

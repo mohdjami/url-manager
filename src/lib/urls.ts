@@ -1,7 +1,6 @@
 import { createClient } from "@/supabase/server";
 import { NextRequest } from "next/server";
-import { revalidatePath } from "next/cache"
-
+import { revalidatePath } from "next/cache";
 
 export default function createShortUrl(): any {
   const code = "qwertyuioplkjhgfdsazxcvbnm";
@@ -27,14 +26,13 @@ export const updateClicks = async (slug: string, req: NextRequest) => {
   }
 
   const updatedClicks = data.clicks + 1;
-  
+
   const { data: updateData, error: updateError } = await supabase
     .from("Url")
     .update({ clicks: updatedClicks })
     .eq("shortUrl", slug)
     .select("clicks")
     .single();
-
   if (updateError) {
     console.error("Error updating clicks:", updateError);
     return;
@@ -70,7 +68,7 @@ export const updateClicks = async (slug: string, req: NextRequest) => {
   //     ipAddress: ip,
   //   },
   // });
-  revalidatePath('/dashboard');
+  revalidatePath("/dashboard");
   return updatedClicks;
 };
 

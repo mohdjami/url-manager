@@ -69,7 +69,7 @@ export default function Hero() {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 min-h-screen flex flex-col justify-center">
       <main className="flex-1 w-full max-w-6xl mx-auto">
-        <section className="py-12 md:py-20 lg:py-24 mt-32 md:mt-20 lg:mt-10">
+        <section className="py-12 md:py-20 lg:py-24 mt-20 lg:mt-10">
           <div className="grid gap-8 lg:gap-12 lg:grid-cols-2 items-center">
             {/* Left Column - Text Content */}
             <div className="space-y-6 text-center lg:text-left">

@@ -8,29 +8,27 @@ import { UserAccountNav2 } from "./user/user-account-nav";
 
 const Navbar = async () => {
   const { supabase, user } = await getCurrentUser();
+  
   return (
-    <header className="sm:flex sm:justify-between   px-4  bg-slate-900 dark:bg-zinc-100 py-2 border-b border-s-zinc-200 fixed w-full z-10 top-0">
-      <div className="relative px-4 sm:px-6 lg:px-8 flex h-12 items-center justify-between w-full mx-auto max-w-7xl">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-14 max-w-screen-2xl items-center">
         <HeaderRoutes />
-        <div className="flex items-center justify-center">
-          <Mode />
-          &nbsp; &nbsp;
-          {user ? (
-            <>
-              <UserAccountNav2 user={user} />
-            </>
-          ) : (
-            <Link
-              className={buttonVariants({ variant: "secondary" })}
-              href="/sign-in"
-            >
-              Sign in
-            </Link>
-          )}
+        <div className="flex flex-1 items-center justify-end space-x-4">
+          <nav className="flex items-center space-x-2">
+            <Mode />
+            {user ? (
+              <UserAccountNav user={user} />
+            ) : (
+              <Link
+                href="/sign-in"
+                className={buttonVariants({ variant: "secondary", size: "sm" })}
+              >
+                Sign in
+              </Link>
+            )}
+          </nav>
         </div>
       </div>
     </header>
-  );
-};
-
-export default Navbar;
+  )
+}

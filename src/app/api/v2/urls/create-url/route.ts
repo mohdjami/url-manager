@@ -9,8 +9,10 @@ import { z } from "zod";
 import { rateLimiting } from "@/lib/rate-limiting";
 import { createClient } from "@/supabase/server";
 import { revalidatePath } from "next/cache";
+import { URLShortenerService } from "@/services/url.service";
 
 export async function POST(req: NextRequest) {
+  const urlService = new URLShortenerService();
   try {
     // console.log("route called");
     const { supabase, user } = await getCurrentUser();
@@ -52,29 +54,29 @@ export async function POST(req: NextRequest) {
         status: 409,
       });
     console.log(slugExists, urlExist);
-
-    const { data: Url, error: InsertError } = await supabase
-      .from("Url")
-      .insert({
-        originalUrl: parsedUrl,
-        shortUrl: parsedCode.slug,
-        userId: user.id,
-      });
-    if (InsertError) {
-      console.log(InsertError);
-      return NextResponse.json(
-        {
-          error: "An error occured",
-        },
-        {
-          status: 500,
-        }
-      );
-    }
+    const url = await urlService.createShortURL(parsedUrl, user.id);
+    // const { data: Url, error: InsertError } = await supabase
+    //   .from("Url")
+    //   .insert({
+    //     originalUrl: parsedUrl,
+    //     shortUrl: parsedCode.slug,
+    //     userId: user.id,
+    //   });
+    // if (InsertError) {
+    //   console.log(InsertError);
+    //   return NextResponse.json(
+    //     {
+    //       error: "An error occured",
+    //     },
+    //     {
+    //       status: 500,
+    //     }
+    //   );
+    // }
 
     revalidatePath("/dashboard");
     return NextResponse.json({
-      url: Url,
+      Url: url,
       code,
     });
   } catch (error) {

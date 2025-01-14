@@ -21,7 +21,6 @@ export class URLShortenerService {
     // Initialize nanoid with our custom alphabet
     this.nanoid = customAlphabet(this.BASE62_CHARS, this.SLUG_LENGTH);
   }
-  
 
   async createShortURL(
     originalURL: string,
@@ -61,7 +60,7 @@ export class URLShortenerService {
           throw new Error(`Failed to create short URL: ${InsertError.message}`);
         }
 
-        return slug;
+        return originalURL;
       } catch (error) {
         attempts++;
         if (attempts === this.MAX_RETRIES) {
@@ -102,4 +101,3 @@ export class URLShortenerService {
     return buffer.readUInt32BE(0);
   }
 }
-

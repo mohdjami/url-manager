@@ -17,7 +17,7 @@ export function Mode() {
           }}
           variant="link"
         >
-          <Icons.moon className="w-6 h-6 text-white" />
+          <Icons.moon className="w-6 h-6 text-black" />
         </Button>
       ) : (
         <Button
@@ -27,7 +27,7 @@ export function Mode() {
           }}
           variant="link"
         >
-          <Icons.sun className="w-6 h-6 text-black dark:text-black" />
+          <Icons.sun className="w-6 h-6 dark:text-white" />
         </Button>
       )}
 

@@ -55,9 +55,9 @@ const HeaderRoutes = async () => {
         </Sheet>
         <Link className="flex items-center justify-center" href="/">
           <Link href="/">
-            <HandMetal className=" md:block hidden text-[#ffffff] dark:text-black" />
+            <HandMetal className=" md:block hidden text-black dark:text-white" />
           </Link>{" "}
-          <span className="ml-2 text-lg font-bold text-[#ffffff] dark:text-black">
+          <span className="ml-2 text-lg font-bold text-black dark:text-white">
             URL Manager
           </span>
         </Link>
@@ -67,7 +67,7 @@ const HeaderRoutes = async () => {
           <Link
             key={i}
             href={route.href}
-            className="text-sm font-medium transition-colors text-[#ffffff] dark:text-black"
+            className="text-sm font-medium transition-colors text-black dark:text-white"
           >
             {route.label}
           </Link>

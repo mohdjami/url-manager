@@ -4,11 +4,13 @@ import { redis } from "@/lib/redis";
 import { updateClicks } from "@/lib/urls";
 import { createClient } from "@/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
-import { revalidatePath } from "next/cache"
+import { revalidatePath } from "next/cache";
+import { URLShortenerService } from "@/services/url.service";
 
 export async function GET(req: NextRequest) {
-  const path = req.nextUrl.searchParams.get('path')
+  const path = req.nextUrl.searchParams.get("path");
   const supabase = createClient();
+  const URLService = new URLShortenerService();
   try {
     const slug = req.url.split("/").pop();
     const ip = req.headers.get("x-forwarded-for") || req.ip;
@@ -34,12 +36,9 @@ export async function GET(req: NextRequest) {
         },
       });
     }
-    const { data: url, error: urlError } = await supabase
-      .from("Url")
-      .select("originalUrl")
-      .eq("shortUrl", slug)
-      .single();
-    if (!url || urlError) {
+    const url = await URLService.getOriginalURL(slug);
+
+    if (!url) {
       return NextResponse.json(
         {
           error: "No url found",
@@ -63,9 +62,9 @@ export async function GET(req: NextRequest) {
     // });
 
     await updateClicks(slug, req);
-    revalidatePath("/dashboard")
-    await redis.set(slug, url.originalUrl);
-    return NextResponse.redirect(url.originalUrl || "/", {
+    revalidatePath("/dashboard");
+    await redis.set(slug, url);
+    return NextResponse.redirect(url || "/", {
       headers: {
         "Cache-Control": "public, max-age=31536000, immutable",
       },

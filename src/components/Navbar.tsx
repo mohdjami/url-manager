@@ -17,7 +17,7 @@ const Navbar = async () => {
           <nav className="flex items-center space-x-2">
             <Mode />
             {user ? (
-              <UserAccountNav user={user} />
+              <UserAccountNav />
             ) : (
               <Link
                 href="/sign-in"
@@ -32,3 +32,5 @@ const Navbar = async () => {
     </header>
   )
 }
+
+export default Navbar;

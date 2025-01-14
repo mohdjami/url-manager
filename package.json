@@ -62,5 +62,8 @@
     "@types/nodemailer": "^6.4.14",
     "@types/uuid": "^9.0.7",
     "prisma": "^5.19.1"
+  },
+  "volta": {
+    "node": "23.6.0"
   }
 }

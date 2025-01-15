@@ -13,10 +13,11 @@ import { URLShortenerService } from "@/services/url.service";
 
 export async function POST(req: NextRequest) {
   const urlService = new URLShortenerService();
+  let data: any;
+
   try {
     // console.log("route called");
     const { supabase, user } = await getCurrentUser();
-    console.log(user.id);
     const ip = req.headers.get("x-forwarded-for") || req.ip;
     await rateLimiting(ip!);
     let { parsedUrl, code } = await req.json();
@@ -40,43 +41,27 @@ export async function POST(req: NextRequest) {
         }
       );
     }
-    while (!code) {
-      code = await createShortUrl();
+    //if code is provided then create the url with that code
+    if(code) {
+      data = await urlService.createShortURL(parsedUrl, user.id, code);
+      if (!data || !data.code) {
+        NextResponse.json(
+          {
+            error: "Something went very wrong",
+          },
+          {
+            status: 500,
+          }
+        );
+      }
+      code = data.code;
     }
-    const parsedCode = slugSchema.parse({ slug: code });
-    console.log(parsedCode);
+    data = await urlService.createShortURL(parsedUrl, user.id);
+    const parsedCode = slugSchema.parse({ slug: code }); 
     await redis.set(parsedCode.slug, parsedUrl, "EX", 60 * 60 * 24 * 7); // expire in one week
-    const slugExists = await findSlug(parsedCode.slug);
-    const urlExist = await urlExists(user.id, parsedUrl);
-    if (slugExists || urlExist)
-      return NextResponse.json({
-        error: `${slugExists} and ${urlExist}`,
-        status: 409,
-      });
-    console.log(slugExists, urlExist);
-    const url = await urlService.createShortURL(parsedUrl, user.id);
-    // const { data: Url, error: InsertError } = await supabase
-    //   .from("Url")
-    //   .insert({
-    //     originalUrl: parsedUrl,
-    //     shortUrl: parsedCode.slug,
-    //     userId: user.id,
-    //   });
-    // if (InsertError) {
-    //   console.log(InsertError);
-    //   return NextResponse.json(
-    //     {
-    //       error: "An error occured",
-    //     },
-    //     {
-    //       status: 500,
-    //     }
-    //   );
-    // }
-
     revalidatePath("/dashboard");
     return NextResponse.json({
-      Url: url,
+      Url: data.url,
       code,
     });
   } catch (error) {

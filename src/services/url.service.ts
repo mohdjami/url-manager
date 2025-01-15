@@ -1,6 +1,7 @@
 import { customAlphabet } from "nanoid";
 import { randomBytes } from "crypto";
 import { createClient } from "@/supabase/server";
+import { NextResponse } from "next/server";
 
 interface URLRecord {
   id: number;
@@ -25,14 +26,18 @@ export class URLShortenerService {
   async createShortURL(
     originalURL: string,
     userId: string,
+    code?: string,
     expiresIn?: number
-  ): Promise<string> {
+  ): Promise<Object> {
     let attempts = 0;
     let slug: string;
 
     while (attempts < this.MAX_RETRIES) {
       try {
         // Generate a random slug using nanoid
+        if (code) {
+          slug = code;
+        }
         slug = this.nanoid();
 
         // Calculate expiration date if provided
@@ -57,10 +62,20 @@ export class URLShortenerService {
             attempts++;
             continue;
           }
-          throw new Error(`Failed to create short URL: ${InsertError.message}`);
+          NextResponse.json(
+            {
+              error: "Something went very wrong",
+            },
+            {
+              status: 500,
+            }
+          );
         }
-
-        return originalURL;
+        const data = {
+          Url: originalURL,
+          code: slug,
+        };
+        return data;
       } catch (error) {
         attempts++;
         if (attempts === this.MAX_RETRIES) {

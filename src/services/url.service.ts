@@ -2,6 +2,9 @@ import { customAlphabet } from "nanoid";
 import { randomBytes } from "crypto";
 import { createClient } from "@/supabase/server";
 import { redis } from "@/lib/redis";
+import { slugSchema } from "@/lib/validations/urls";
+import { findSlug, urlExists } from "@/lib/urls";
+import { NextResponse } from "next/server";
 
 interface URLRecord {
   id: number;
@@ -42,8 +45,18 @@ export class URLShortenerService {
           ? new Date(Date.now() + expiresIn * 1000)
           : null;
 
+        const parsedCode = slugSchema.parse({ slug: code });
+        const slugExists = await findSlug(parsedCode.slug);
+        const urlExist = await urlExists(userId, originalURL);
+        if (slugExists || urlExist) {
+          NextResponse.json({
+            error: `${slugExists} and ${urlExist} already exists`,
+            status: 409,
+          });
+        }
+
         // Try to insert the URL record
-        const { data: Url, error: InsertError } = await this.supabase
+        const { error: InsertError } = await this.supabase
           .from("Url")
           .insert({
             originalUrl: originalURL,

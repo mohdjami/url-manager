@@ -39,15 +39,7 @@ export async function POST(req: NextRequest) {
         }
       );
     }
-    //if no code then create one
-    const parsedCode = slugSchema.parse({ slug: code });
-    const slugExists = await findSlug(parsedCode.slug);
-    const urlExist = await urlExists(user.id, parsedUrl);
-    if (slugExists || urlExist)
-      return NextResponse.json({
-        error: `${slugExists} and ${urlExist}`,
-        status: 409,
-      });
+    //if no code then create one      
     const slug = await urlService.createShortURL(parsedUrl, user.id, code);
     // const { data: Url, error: InsertError } = await supabase
     //   .from("Url")

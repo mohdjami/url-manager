@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/Icons";
 import { UserAvatar } from "@/components/user/user-avatar";
-import { Button } from "../ui/button";
 import { Logout } from "../dialogs/logout-dialog";
 import { useState } from "react";
 import { createClient } from "@/supabase/client";

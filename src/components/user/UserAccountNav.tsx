@@ -3,17 +3,15 @@ import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import React from "react";
 import { Logout } from "../dialogs/logout-dialog";
+import { createClient } from "@/supabase/client";
 
 const UserAccountNav = () => {
   const [showLogoutAlert, setShowLogoutAlert] = React.useState<boolean>(false);
   const [isLogoutLoading, setIsLogoutLoading] = React.useState<boolean>(false);
-
+  const supabase = createClient();
   const handleLogout = async () => {
     setIsLogoutLoading(true);
-    const logout = await signOut({
-      redirect: true,
-      callbackUrl: `${window.location.origin}/sign-in`,
-    });
+    const logout = await supabase.auth.signOut();
 
     if (logout) {
       setIsLogoutLoading(false);

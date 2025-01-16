@@ -20,9 +20,9 @@ import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { CopyCheckIcon, CopyIcon } from "lucide-react";
+import { createClient } from "@/supabase/client";
 
-export default function Hero() {
-  const { data: session } = useSession();
+export default function Hero() {  
   const [url, setUrl] = useState<string>("");
   const [copy, setCopy] = useState<boolean>(false);
 
@@ -49,20 +49,20 @@ export default function Hero() {
         setCode("");
         setLoading(false);
       }
-    } catch (error) {
+    } catch (error : any) {
       setLoading(false);
-      if (!session) {
-        toast({
-          title: "You must be signed in to create a URL",
-          variant: "destructive",
-        });
-      } else if (error instanceof z.ZodError) {
+      if (error instanceof z.ZodError) {
         toast({
           title: error.errors[0].message,
           description: "Urls must start with http:// or https://",
           variant: "destructive",
         });
       }
+      toast({
+        title: error.message,
+        description: "Please try again",
+        variant: "destructive",
+      });
     }
   };
 

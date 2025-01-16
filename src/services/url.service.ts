@@ -1,6 +1,7 @@
 import { customAlphabet } from "nanoid";
 import { randomBytes } from "crypto";
 import { createClient } from "@/supabase/server";
+import { redis } from "@/lib/redis";
 
 interface URLRecord {
   id: number;
@@ -16,24 +17,25 @@ export class URLShortenerService {
   private readonly BASE62_CHARS =
     "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
   private readonly nanoid: (size?: number) => string;
-
+  private readonly redis;
   constructor(private readonly supabase = createClient()) {
     // Initialize nanoid with our custom alphabet
     this.nanoid = customAlphabet(this.BASE62_CHARS, this.SLUG_LENGTH);
+    this.redis = redis;
   }
 
   async createShortURL(
     originalURL: string,
     userId: string,
+    code?: string,
     expiresIn?: number
   ): Promise<string> {
     let attempts = 0;
-    let slug: string;
 
     while (attempts < this.MAX_RETRIES) {
       try {
         // Generate a random slug using nanoid
-        slug = this.nanoid();
+        if (!code) code = this.nanoid();
 
         // Calculate expiration date if provided
         const expiresAt = expiresIn
@@ -45,7 +47,7 @@ export class URLShortenerService {
           .from("Url")
           .insert({
             originalUrl: originalURL,
-            shortUrl: slug,
+            shortUrl: code,
             userId,
           })
           .single();
@@ -60,7 +62,9 @@ export class URLShortenerService {
           throw new Error(`Failed to create short URL: ${InsertError.message}`);
         }
 
-        return originalURL;
+        // Store the original URL in Redis
+        await this.redis.set(code, originalURL, "EX", 60 * 60 * 24 * 7); // expire in one week
+        return code; // Return the generated code instead of originalURL
       } catch (error) {
         attempts++;
         if (attempts === this.MAX_RETRIES) {

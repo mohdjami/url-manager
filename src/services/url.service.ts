@@ -2,8 +2,7 @@ import { customAlphabet } from "nanoid";
 import { randomBytes } from "crypto";
 import { createClient } from "@/supabase/server";
 import { redis } from "@/lib/redis";
-import { slugSchema } from "@/lib/validations/urls";
-import { findSlug, urlExists } from "@/lib/urls";
+import { slugSchema, UrlSchema } from "@/lib/validations/urls";
 import { NextResponse } from "next/server";
 
 interface URLRecord {
@@ -46,8 +45,10 @@ export class URLShortenerService {
           : null;
 
         const parsedCode = slugSchema.parse({ slug: code });
-        const slugExists = await findSlug(parsedCode.slug);
-        const urlExist = await urlExists(userId, originalURL);
+        const parsedUrl = UrlSchema.parse({ originalURL });
+
+        const slugExists = await this.findSlug(parsedCode.slug);
+        const urlExist = await this.urlExists(userId, parsedUrl.url);
         if (slugExists || urlExist) {
           NextResponse.json({
             error: `${slugExists} and ${urlExist} already exists`,
@@ -108,6 +109,57 @@ export class URLShortenerService {
     }
 
     return data.originalUrl;
+  }
+  async findSlug(slug: string) {
+    const supabase = createClient();
+    const { data: url, error } = await supabase
+      .from("Url")
+      .select("*")
+      .eq("shortUrl", slug)
+      .single();
+    if (error) {
+      console.log(error);
+      return null;
+    }
+    return url;
+  }
+
+  async urlExists(
+    userId: string,
+    parsedUrl?: string | null,
+    shortUrl?: string | null
+  ) {
+    const supabase = createClient();
+    try {
+      if (shortUrl) {
+        const { data: url, error } = await supabase
+          .from("Url")
+          .select("*")
+          .eq("shortUrl", shortUrl)
+          .eq("userId", userId)
+          .single();
+        if (error) {
+          console.log(error);
+          return null;
+        }
+        return url;
+      }
+      const { data: url, error } = await supabase
+        .from("Url")
+        .select("*")
+        .eq("originalUrl", parsedUrl)
+        .eq("userId", userId)
+        .single();
+      if (error) {
+        console.log(error);
+        return null;
+      }
+      return url;
+    } catch (error) {
+      return new Response(null, {
+        status: 500,
+      });
+    }
   }
 
   // Additional utility methods

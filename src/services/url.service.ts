@@ -80,6 +80,7 @@ export class URLShortenerService {
         await this.redis.set(code, originalURL, "EX", 60 * 60 * 24 * 7); // expire in one week
         return code; // Return the generated code instead of originalURL
       } catch (error) {
+        console.log(error);
         attempts++;
         if (attempts === this.MAX_RETRIES) {
           throw new Error(

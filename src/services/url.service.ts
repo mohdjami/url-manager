@@ -111,8 +111,7 @@ export class URLShortenerService {
     return data.originalUrl;
   }
   async findSlug(slug: string) {
-    const supabase = createClient();
-    const { data: url, error } = await supabase
+    const { data: url, error } = await this.supabase
       .from("Url")
       .select("*")
       .eq("shortUrl", slug)
@@ -129,10 +128,9 @@ export class URLShortenerService {
     parsedUrl?: string | null,
     shortUrl?: string | null
   ) {
-    const supabase = createClient();
     try {
       if (shortUrl) {
-        const { data: url, error } = await supabase
+        const { data: url, error } = await this.supabase
           .from("Url")
           .select("*")
           .eq("shortUrl", shortUrl)
@@ -144,7 +142,7 @@ export class URLShortenerService {
         }
         return url;
       }
-      const { data: url, error } = await supabase
+      const { data: url, error } = await this.supabase
         .from("Url")
         .select("*")
         .eq("originalUrl", parsedUrl)
@@ -155,6 +153,23 @@ export class URLShortenerService {
         return null;
       }
       return url;
+    } catch (error) {
+      return new Response(null, {
+        status: 500,
+      });
+    }
+  }
+  async getALLUrls(userId: string) {
+    try {
+      const { data: urls, error } = await this.supabase
+        .from("Url")
+        .select("*")
+        .eq("userId", userId);
+      if (error) {
+        console.log(error);
+        return null;
+      }
+      return urls;
     } catch (error) {
       return new Response(null, {
         status: 500,

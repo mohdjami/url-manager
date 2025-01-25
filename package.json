@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "next build",
     "standalone": "next build && prisma generate && cp -r public/ .next/standalone && cp -r next/static .next/standalone/.next",
     "start": "next start",
     "lint": "next lint"

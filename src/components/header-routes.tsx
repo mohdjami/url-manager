@@ -1,7 +1,7 @@
-import Link from "next/link";
-import { HandMetal, Menu } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { getCurrentUser } from "@/lib/session";
+import { HandMetal, Menu } from "lucide-react";
+import Link from "next/link";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 const HeaderRoutes = async () => {
   const { supabase, user } = await getCurrentUser();
 
@@ -54,9 +54,7 @@ const HeaderRoutes = async () => {
           </SheetContent>
         </Sheet>
         <Link className="flex items-center justify-center" href="/">
-          <Link href="/">
-            <HandMetal className=" md:block hidden text-black dark:text-white" />
-          </Link>{" "}
+          <HandMetal className=" md:block hidden text-black dark:text-white" />
           <span className="ml-2 text-lg font-bold text-black dark:text-white">
             URL Manager
           </span>

@@ -1,28 +1,22 @@
 "use client";
-import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { JSX, SVGProps, use, useState } from "react";
+import { siteConfig } from "@/config/site";
+import { fetchUrl } from "@/lib/fetchUrl";
+import { CopyCheckIcon, CopyIcon } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import { z } from "zod";
+import { Icons } from "../Icons";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
-  CardTitle,
+  CardHeader,
+  CardTitle
 } from "../ui/card";
 import { useToast } from "../ui/use-toast";
-import { useSession } from "next-auth/react";
-import createShortUrl from "@/lib/urls";
-import { fetchUrl } from "@/lib/fetchUrl";
-import { z } from "zod";
-import { Icons } from "../Icons";
-import { siteConfig } from "@/config/site";
-import { cn } from "@/lib/utils";
-import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
-import { CopyCheckIcon, CopyIcon } from "lucide-react";
-import { createClient } from "@/supabase/client";
 
-export default function Hero() {  
+export default function Hero() {
   const [url, setUrl] = useState<string>("");
   const [copy, setCopy] = useState<boolean>(false);
 
@@ -49,7 +43,7 @@ export default function Hero() {
         setCode("");
         setLoading(false);
       }
-    } catch (error : any) {
+    } catch (error: any) {
       setLoading(false);
       if (error instanceof z.ZodError) {
         toast({
@@ -110,7 +104,7 @@ export default function Hero() {
                     />
                   </form>
                 </CardTitle>
-                <CardDescription className="p-6">
+                <CardContent className="p-6">
                   <form className="flex space-x-2" onSubmit={handleSubmit}>
                     <Input
                       className="flex-1 h-10"
@@ -118,7 +112,7 @@ export default function Hero() {
                       type="url"
                       onChange={(e) => setUrl(e.target.value)}
                     />
-                    <Button 
+                    <Button
                       type="submit"
                       className="h-10 px-6 transition-all duration-200 hover:scale-105"
                       onClick={handleSubmit}
@@ -130,13 +124,14 @@ export default function Hero() {
                       )}
                     </Button>
                   </form>
-                </CardDescription>
+                </CardContent>
               </Card>
 
               <Card className="shadow-md transition-all duration-200 hover:shadow-lg">
-                <CardDescription>
-                  <CardTitle className="p-6">
-                    {displayCode || success ? (
+                <CardHeader className="p-6">
+                  {displayCode || success ? (
+                    <CardTitle className="p-6">
+
                       <div className="flex items-center justify-between gap-4">
                         <Link
                           className="text-gray-500 dark:text-gray-400 text-sm md:text-base font-medium truncate hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
@@ -163,13 +158,13 @@ export default function Hero() {
                           )}
                         </Button>
                       </div>
-                    ) : (
-                      <CardContent className="p-0 text-center text-gray-500 dark:text-gray-400">
-                        Create a URL
-                      </CardContent>
-                    )}
-                  </CardTitle>
-                </CardDescription>
+                    </CardTitle>
+                  ) : (
+                    <CardContent className="p-0 text-center text-gray-500 dark:text-gray-400">
+                      Create a URL
+                    </CardContent>
+                  )}
+                </CardHeader>
               </Card>
             </div>
           </div>
